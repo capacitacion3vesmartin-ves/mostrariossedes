@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mostrarios</title>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Mostrarios</title>
 <style>
 :root{--g:#10a43a;--gd:#06621c;--tx:#13302a;--mu:#5b6f66;--bd:#d8e6dc;--bg:#f2f7f3}
 *{box-sizing:border-box}
@@ -143,7 +143,7 @@ h1{margin:10px 0 4px;text-align:center;font-size:38px;color:#0b5d1f}
 .ptsec .ds{margin:2px 0 4px;font-size:12.5px}
 .tr{display:flex;align-items:center;gap:8px;border:2px solid #e3eee6;border-radius:10px;padding:8px 10px;margin-top:8px}.tr .in{flex:1;font-size:13.5px}.tr small{display:block;color:var(--mu);font-size:12px}
 .err{border-left:6px solid #e11d48}.ok{border-left:6px solid var(--g);opacity:.7}
-#lb{display:none;position:fixed;inset:0;z-index:200;background:#000;align-items:center;justify-content:center}#lb img{max-width:100%;max-height:100%;touch-action:pinch-zoom}
+#lb{display:none;position:fixed;inset:0;z-index:200;background:#000;align-items:center;justify-content:center}#lb img{max-width:100%;max-height:100%;touch-action:none}
 #lb button{position:absolute;border:0;border-radius:50%;width:40px;height:40px;font-weight:900;cursor:pointer}
 #lb .lbx{right:12px;top:12px}#lb .lbn{top:50%;transform:translateY(-50%)}
 .lbh{position:absolute;left:14px;top:14px;color:#fff;font-weight:800;font-size:13px;background:#e11d48;padding:6px 12px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
@@ -157,12 +157,26 @@ h1{margin:10px 0 4px;text-align:center;font-size:38px;color:#0b5d1f}
 #pm button{border:0;background:#eef2ef;border-radius:8px;padding:9px 12px;font-weight:700;text-align:left;cursor:pointer;color:var(--tx)}
 #pm button:hover{background:#dff3e4}
 .ph{scroll-margin-top:62px}
+.upb{border:0;border-radius:8px;background:#2563eb;color:#fff;font-weight:700;font-size:12px;padding:4px 10px;cursor:pointer}.upb:disabled{opacity:.5;cursor:default}
+.upg{margin-top:6px}.fr.dz,#fz.dz{outline:3px dashed #2563eb;outline-offset:2px;background:#eef4ff}
+.cvw{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start}
+.cv{box-sizing:content-box;position:relative;border:2px solid #2563eb;border-radius:12px;overflow:hidden;background:#e8efe9;cursor:grab;touch-action:none;max-width:100%}
+.cv img,.cvp img{width:100%;height:100%;object-fit:cover;display:block;user-select:none;-webkit-user-drag:none;pointer-events:none}
+.cvh{position:absolute;width:14px;height:14px;background:#fff;border:2px solid #2563eb;border-radius:4px;z-index:2}@media(hover:none){.cvh{width:24px;height:24px}}
+.cvh[data-c=nw]{left:3px;top:3px;cursor:nwse-resize}.cvh[data-c=ne]{right:3px;top:3px;cursor:nesw-resize}.cvh[data-c=sw]{left:3px;bottom:3px;cursor:nesw-resize}.cvh[data-c=se]{right:3px;bottom:3px;cursor:nwse-resize}
+.cvp{border:2px solid var(--bd);border-radius:12px;overflow:hidden;background:#e8efe9}
+#lb .lbz{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);display:flex;gap:10px;z-index:3}#lb .lbz button{position:static;width:50px;height:50px;font-size:24px;background:#fff;color:#111}#lb .lbz .z0{width:auto;border-radius:25px;padding:0 16px;font-size:14px}
+#lb img{transform-origin:center;user-select:none;-webkit-user-drag:none}
+.secs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}.sc{border:2px solid var(--bd);background:#fff;border-radius:18px;padding:6px 14px;font-weight:800;font-size:13.5px;color:var(--tx);cursor:pointer}.sc small{font-weight:700;color:var(--mu);margin-left:4px}.sc.on{background:var(--g);border-color:var(--g);color:#fff}.sc.on small{color:#fff}
+.mcw{display:flex;flex-direction:column;gap:6px}.mc2.v{flex-direction:column;align-items:stretch;gap:0;padding:0;overflow:hidden;width:100%;flex:1}
+.mgi{display:block;width:100%;aspect-ratio:1/1;object-fit:cover;background:#e8efe9}.mct{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.dlb{border:2px solid var(--bd);background:#fff;border-radius:10px;padding:6px;font-weight:700;font-size:12.5px;color:var(--gd);cursor:pointer}
 </style></head><body>
 <div class="bn"><button id="bk" class="vb" data-a="atras">← Volver</button><span class="t">MOSTRARIOS</span></div>
 <div id="app"></div>
 <button id="mbtn" class="mbtn" data-a="master">Master</button>
 <div id="dh">Suelta sobre un espacio vacío, sobre otro casillero (se intercambian) o sobre el título de otra parte</div>
-<div id="md" class="md"></div><div id="lb"><div class="lbh">Pulsa Esc para volver</div><button class="lbx" data-a="cerrarlb">×</button><button class="lbn" data-a="lbprev" style="left:10px">◄</button><button class="lbn" data-a="lbnext" style="right:10px">►</button><div class="lbc" id="lbc"></div><img id="lbi" alt=""></div><div id="tt"></div><div id="pm"></div>
+<div id="md" class="md"></div><div id="lb"><div class="lbh">Pulsa Esc para volver</div><button class="lbx" data-a="cerrarlb">×</button><button class="lbn" data-a="lbprev" style="left:10px">◄</button><button class="lbn" data-a="lbnext" style="right:10px">►</button><div class="lbc" id="lbc"></div><div class="lbz"><button data-a="lbzm" title="Alejar">−</button><button class="z0" id="lbz0" data-a="lbz0" title="Tamaño original">100%</button><button data-a="lbzp" title="Acercar">+</button></div><img id="lbi" alt="" draggable="false"></div><div id="tt"></div><div id="pm"></div>
 <script>
 /* URL_API vacío = MODO DE PRUEBA (datos solo en este navegador). Pega aquí la URL de tu Apps Script (termina en /exec) para usar Google Sheets. */
 const URL_API='https://script.google.com/macros/s/AKfycbyxGX81abYuVSynH7tZeX_de4E-UnHq8qY2TI_q3WF_CMm9atv5LXXPNM8aeLH94rh80Q/exec';const URL_CAMPUS='https://capacitacion3vesmartin-ves.github.io/campuscapacitacion/';const CLAVE_DEMO='master123';
@@ -302,7 +316,7 @@ function cerrar(){$('#md').style.display='none';$('#md').innerHTML=''}
 function msg(t){const m=$('#mm');if(m)m.textContent=t}
 let LB={l:[],c:[],i:0};
 function zoom(l,i,c){LB.l=l;LB.c=c||[];LB.i=i||0;lbShow();$('#lb').style.display='flex'}
-function lbShow(){$('#lbi').src=LB.l[LB.i];$('#lbc').textContent=(LB.c[LB.i]||'')+(LB.c[LB.i]&&LB.l.length>1?'  ·  ':'')+(LB.l.length>1?(LB.i+1)+' / '+LB.l.length:'');document.querySelectorAll('.lbn').forEach(b=>b.style.display=LB.l.length>1?'block':'none')}
+function lbShow(){lzSet(1,0,0);$('#lbi').src=LB.l[LB.i];$('#lbc').textContent=(LB.c[LB.i]||'')+(LB.c[LB.i]&&LB.l.length>1?'  ·  ':'')+(LB.l.length>1?(LB.i+1)+' / '+LB.l.length:'');document.querySelectorAll('.lbn').forEach(b=>b.style.display=LB.l.length>1?'block':'none')}
 function lbMove(d){if(LB.l.length<2)return;LB.i=(LB.i+d+LB.l.length)%LB.l.length;lbShow()}
 const PHI='data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 56 56"><rect width="56" height="56" fill="#e8efe9"/></svg>');
 function setThumb(im,v){v=String(v||'').trim();im.src=okImg(v)?v:PHI}
@@ -315,7 +329,7 @@ function tile(p,m,o){o=o||{};const st=o.pos?' style="--c0:'+(p.c+1)+';--r0:'+(p.
  mv=fl?'<span class="mvb">↔ Movido aquí</span>':f2?'<span class="mvb s2">← Aquí estaba</span>':fd?'<span class="mvb f">Aquí está</span>':'',
  fc=(fl?' flash':'')+(f2?' flash2':'')+(fd?' find':'')+(o.dim?' dim':'')+(o.hit?' hit':'')+(o.ed?' ed':'');
  const ag=+p.agotado,pe=MASTER?pend(p.id):0,F=fotosP(p);
- return '<div class="tl'+(ag?' ag':'')+fc+'" data-a="ver" data-id="'+p.id+'"'+st+'><div class="im"><img src="'+E(F[0])+'" alt="'+E(p.codigo)+'" loading="lazy" draggable="false" referrerpolicy="no-referrer">'+(MASTER&&o.pos?'<span class="pos">F'+(p.r+1)+'·C'+(p.c+1)+'</span>':'')+(ag?'<span class="bdg">AGOTADO</span>':'')+(F.length>1?'<span class="bdg p">'+F.length+'</span>':'')+(pe?'<span class="bdg w">'+pe+'</span>':'')+'</div>'
+ return '<div class="tl'+(ag?' ag':'')+fc+'" data-a="ver" data-id="'+p.id+'"'+st+'><div class="im"><img src="'+E(F[0])+'" alt="'+E(p.codigo)+'"'+(p.enc?' style="'+encCss(p.enc)+'"':'')+' loading="lazy" draggable="false" referrerpolicy="no-referrer">'+(MASTER&&o.pos?'<span class="pos">F'+(p.r+1)+'·C'+(p.c+1)+'</span>':'')+(ag?'<span class="bdg">AGOTADO</span>':'')+(F.length>1?'<span class="bdg p">'+F.length+'</span>':'')+(pe?'<span class="bdg w">'+pe+'</span>':'')+'</div>'
   +(o.etq?'<div class="lbl">'+ico(m)+' '+E(m.nombre)+'</div>':'')+'<div class="cd">'+E(p.codigo)+'</div><div class="nm">'+E(p.nombre)+'</div>'+(o.ed?ctrl(p):'')+mv+(o.ed?nodos():'')+'</div>'}
 function celdaV(r,c,ed,f2,badge,s){return '<div class="ec'+(ed?'':' q')+(f2?' flash2':'')+'" data-r="'+r+'" data-c="'+c+'" data-s="'+E(s)+'" style="--c0:'+(c+1)+';--r0:'+(r+1)+';--sx:1;--sy:1"'+(ed?' data-a="addaqui" title="Añadir un producto aquí"':'')+'>'+(ed?'＋':'')+(badge?'<span class="mvb s2">← Aquí estaba</span>':'')+'</div>'}
 function sideHtml(m){const it=fotosM(m),P=m.partes||[],falta=MASTER&&!genFoto(m);if(!it.length&&!MASTER)return '';
@@ -347,7 +361,7 @@ function R(){const a=$('#app');$('#mbtn').style.display=(!MASTER&&SEDE)?'block':
  else if(!MOS){const L=mosSede();h+='<div class="top"><span class="chip" style="--c:'+sedeCol()+'">'+E(SEDE)+'</span></div>'+(MASTER?barra():'')+(!URL_API?'<div class="demo">Modo de prueba: los cambios solo se guardan en este navegador.</div>':'')
   +'<div class="sb"><input id="q" type="text" placeholder="Buscar por código o nombre en toda la sede…" value="'+E(Q)+'" autocomplete="off"></div>';
   if(Q){const r=[];L.forEach(m=>prodsOf(m.id).forEach(p=>{if(match(p))r.push([p,m])}));h+=r.length?'<div class="gr big">'+r.map(x=>tile(x[0],x[1],{etq:1})).join('')+'</div>':'<div class="emp">No se encontró «'+E(Q)+'».</div>'}
-  else{h+=L.length?'<div class="ml">'+L.map(m=>'<button class="mc2" data-a="abrir" data-id="'+m.id+'"><i>'+ico(m)+'</i><span>'+E(m.nombre)+'<small>'+nReal(m.id)+' productos</small></span></button>').join('')+'</div>':'<div class="emp">Esta sede aún no tiene mostrarios.'+(MASTER?'':'<br>Pídele al master que los cree.')+'</div>';
+  else{h+=L.length?chipsSec(L)+secBar(L)+'<div class="ml">'+L.filter(secOk).map(mCard).join('')+'</div>':'<div class="emp">Esta sede aún no tiene mostrarios.'+(MASTER?'':'<br>Pídele al master que los cree.')+'</div>';
    if(MASTER)h+='<div style="margin-top:14px"><button class="bt" data-a="nuevom">+ Nuevo mostrario</button></div>'}}
  else{const m=getM(MOS),L=prodsOf(MOS),cols=+m.cols||4,P=m.partes||[],PV=partesVis(m),ed=MASTER&&!Q,hits=Q?L.filter(match):L,fil=Math.max(secFilas(m,''),...prodsSec(m,'').map(p=>p.r+p.sy));
   h+='<div class="top"><span class="ttl">'+ico(m)+' '+E(m.nombre)+'</span><span class="chip" style="--c:'+sedeCol()+'">'+E(SEDE)+'</span></div>'+(MASTER?barra()+barraM(m,cols,fil):'');
@@ -395,25 +409,25 @@ function prevF(){const v=$('#fv');if(!v)return;if(okImg(FT)){v.style.display='bl
 /* --- fotos del producto: solo enlaces --- */
 function drawFotos(){const v=$('#fth');if(!v)return;
  v.innerHTML=FM.map((f,i)=>{const dv=/^data:/i.test(f),ok=okImg(f);
-  return '<div class="fr"><img src="'+(ok?E(f):PHI)+'" alt="" referrerpolicy="no-referrer"><div class="fc"><input type="text" data-fi="'+i+'" value="'+E(dv?'':f)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'Enlace de la foto (https://…)')+'"><div class="fb">'
-   +(i==0?'<span class="pri2">Portada</span>':'<button data-a="portada" data-v="'+i+'" title="Usar como portada (la primera que se ve)">Hacer portada</button>')
+  return '<div class="fr"><img src="'+(ok?E(f):PHI)+'" alt="" referrerpolicy="no-referrer"><div class="fc"><input type="text" data-fi="'+i+'" value="'+E(dv?'':f)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'Arrastra la foto aquí o pega un enlace')+'"><div class="fb">'
+   +'<button class="upb" data-a="subir" data-k="f" data-v="'+i+'">Subir imagen</button>'+(i==0?'<span class="pri2">Portada</span>':'<button data-a="portada" data-v="'+i+'" title="Usar como portada (la primera que se ve)">Hacer portada</button>')
    +(i>0?'<button data-a="fup" data-v="'+i+'" title="Subir">↑</button>':'')+(i<FM.length-1?'<button data-a="fdn" data-v="'+i+'" title="Bajar">↓</button>':'')
-   +'<button class="dx" data-a="delf" data-v="'+i+'" title="Quitar este campo">×</button></div></div></div>'}).join('')}
-function formP(p,pre,sid){FM=p?fotosP(p).slice():[''];PRE=pre||null;
+   +'<button class="dx" data-a="delf" data-v="'+i+'" title="Quitar este campo">×</button></div></div></div>'}).join('');drawCover()}
+function formP(p,pre,sid){FM=p?fotosP(p).slice():[''];PRE=pre||null;ENC=p&&p.enc?p.enc:'';ENCID=p?p.id:'';SUG.auto='';
  const m=getM(p?p.mos:MOS),P=(m&&m.partes)||[],cur=p?secOf(m,p):(sid||'');
  modal('<button class="x" data-a="cerrar">×</button><h3>'+(p?'Editar producto':'Añadir producto')+'</h3>'
   +(!p?'<p class="ds">'+(pre&&pre.r!=null?'Se colocará en Fila '+(pre.r+1)+' · Columna '+(pre.c+1)+'.':'Se colocará en el primer espacio libre.')+' Luego puedes moverlo arrastrándolo y agrandarlo con los puntos de sus bordes.</p>':'')
   +(P.length?'<label>Parte del mostrario'+(p?' (cámbiala para pasarlo a otra parte)':'')+'<select id="pp">'+P.map(x=>'<option value="'+E(x.id)+'"'+(x.id==cur?' selected':'')+'>'+E(x.nombre)+'</option>').join('')+'</select></label>':'')
-  +'<label>Código (el que se usa para facturar)<input id="pc" type="text" maxlength="40" value="'+E(p?p.codigo:'')+'" placeholder="FER.CE.000617"></label>'
+  +'<label>Código (el que se usa para facturar)<input id="pc" type="text" maxlength="40" value="'+E(p?p.codigo:'')+'" placeholder="FER.CE.000617"></label><div id="pcs" class="ds" style="margin:-4px 0 6px;font-size:12.5px;font-weight:700"></div>'
   +'<label>Nombre corto del producto<input id="pn" type="text" maxlength="120" value="'+E(p?p.nombre:'')+'"></label>'
   +'<label>Descripción para asesores (opcional): medidas, material, uso…<textarea id="pd" maxlength="600">'+E(p?p.desc:'')+'</textarea></label>'
   +'<label><input id="pa" type="checkbox" '+(p&&+p.agotado?'checked':'')+'> Marcar como agotado</label>'
-  +'<label style="margin-top:14px">Fotos del producto (enlaces). La primera es la portada.</label><div id="fth"></div><button class="bt s w" data-a="addfoto" style="margin-top:8px">+ Agregar más fotos</button>'
+  +'<label style="margin-top:14px">Fotos del producto (enlaces). La primera es la portada.</label><div id="fth"></div><button class="bt s w" data-a="addfoto" style="margin-top:8px">+ Agregar más fotos</button><div id="cvr"></div>'
   +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button><button class="bt" data-a="guardarp" data-id="'+(p?p.id:'')+'">Guardar</button></div>',sedeCol());drawFotos()}
 function guardarP(id){const c=$('#pc').value.trim(),n=$('#pn').value.trim();if(!c||!n){msg('Escribe el código y el nombre.');return}
  const raw=FM.map(s=>String(s||'').trim());for(let i=0;i<raw.length;i++)if(raw[i]&&!okImg(raw[i])){msg('La foto '+(i+1)+' no es un enlace válido (debe empezar con https://).');return}
  const fs=raw.filter(Boolean);if(!fs.length){msg('Agrega al menos una foto (enlace).');return}
- const d={codigo:c,nombre:n,desc:$('#pd').value.trim(),agotado:$('#pa').checked?1:0,fotos:fs,foto:fs[0]},sel=$('#pp'),ns=sel?sel.value:'';let aviso='';
+ const d={codigo:c,nombre:n,desc:$('#pd').value.trim(),agotado:$('#pa').checked?1:0,fotos:fs,foto:fs[0],enc:ENC},sel=$('#pp'),ns=sel?sel.value:'';let aviso='';
  if(id){const p=getP(id),m=getM(p.mos);
   if(sel&&ns!=secOf(m,p)){snap();let w=p.sx,h=p.sy,hc=hueco(m,w,h,ns);if(!hc&&(w>1||h>1)){w=h=1;hc=hueco(m,1,1,ns)}
    if(!hc){UNDO.pop();msg('Esa parte está llena (máximo '+MAXF+' filas).');return}
@@ -428,31 +442,32 @@ function guardarP(id){const c=$('#pc').value.trim(),n=$('#pn').value.trim();if(!
 function renum(){PT.forEach((p,k)=>{if(/^Parte \d+$/.test(p.nombre))p.nombre='Parte '+(k+1)})}
 function drawPartes(){const v=$('#pts');if(!v)return;const m=getM(MOS);
  v.innerHTML=PT.length?PT.map((p,i)=>{const f=p.foto||'',dv=/^data:/i.test(f),ok=okImg(f),n=m?prodsSec(m,p.id).length:0;
-  return '<div class="fr"><img src="'+(ok?E(f):PHI)+'" alt="" referrerpolicy="no-referrer"><div class="fc"><input type="text" data-pn="'+i+'" maxlength="40" value="'+E(p.nombre)+'" placeholder="Nombre (ej. Parte '+(i+1)+')"><input type="text" data-pf="'+i+'" value="'+E(dv?'':f)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'Enlace de la foto de esta parte (opcional)')+'">'
+  return '<div class="fr"><img src="'+(ok?E(f):PHI)+'" alt="" referrerpolicy="no-referrer"><div class="fc"><input type="text" data-pn="'+i+'" maxlength="40" value="'+E(p.nombre)+'" placeholder="Nombre (ej. Parte '+(i+1)+')"><input type="text" data-pf="'+i+'" value="'+E(dv?'':f)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'Arrastra la foto aquí o pega un enlace (opcional)')+'">'
    +(n?'<span class="ds" style="margin:0;font-size:12px">'+n+' producto'+(n==1?'':'s')+' en esta parte</span>':'')+'<div class="fb">'
-   +(i>0?'<button data-a="uppt" data-v="'+i+'">↑ Subir</button>':'')+(i<PT.length-1?'<button data-a="dnpt" data-v="'+i+'">↓ Bajar</button>':'')+'<button class="dx" data-a="delpt" data-v="'+i+'">× Quitar</button></div></div></div>'}).join(''):'<p class="ds">Aún no hay partes. Pulsa «Agregar parte».</p>'}
+   +'<button class="upb" data-a="subir" data-k="p" data-v="'+i+'">Subir imagen</button>'+(i>0?'<button data-a="uppt" data-v="'+i+'">↑ Subir</button>':'')+(i<PT.length-1?'<button data-a="dnpt" data-v="'+i+'">↓ Bajar</button>':'')+'<button class="dx" data-a="delpt" data-v="'+i+'">× Quitar</button></div></div></div>'}).join(''):'<p class="ds">Aún no hay partes. Pulsa «Agregar parte».</p>'}
 /* Editar mostrario: solo los datos (nombre, ícono, columnas y filas) */
 function formM(m){const P=m&&m.partes&&m.partes.length;
  modal('<button class="x" data-a="cerrar">×</button><h3>'+(m?'Editar mostrario':'Nuevo mostrario')+'</h3>'
-  +'<label>Nombre<input id="mn" type="text" maxlength="50" value="'+E(m?m.nombre:'')+'" placeholder="Ej. Cerraduras"></label>'
+  +'<label>Nombre<input id="mn" type="text" maxlength="50" value="'+E(m?m.nombre:'')+'" placeholder="Ej. Cerraduras"></label>'+secSel(m)
   +'<label>Ícono</label><input id="mi" type="hidden" value="'+iconKey(m)+'"><div class="ip">'+PICK.map(x=>'<button type="button" class="'+(x==iconKey(m)?'sel':'')+'" data-a="pickic" data-v2="'+x+'" title="Elegir ícono">'+ico({id:m?m.id:'nuevo',nombre:m?m.nombre:'',icono:x}).replace(/--c:[^"]+/,'--c:#475569')+'</button>').join('')+'</div>'
   +'<div class="two"><label>↔ Columnas<input id="mcn" type="number" min="1" max="'+MAXC+'" value="'+E(m?m.cols:5)+'"></label>'+(P?'':'<label>↕ Filas<input id="mfn" type="number" min="1" max="'+MAXF+'" value="'+E(m?m.filas:4)+'"></label>')+'</div>'
   +'<p class="ds" style="font-size:12.5px">'+(P?'Este mostrario tiene partes: las filas se cambian dentro de cada parte (− + en su título). ':'')+'Al aumentar columnas o filas se añaden espacios vacíos: lo que ya está puesto no se mueve. Para quitar, la última fila/columna debe estar vacía.</p>'
   +(m?'':'<p class="ds" style="font-size:12.5px">Las fotos y las partes se añaden después, con el botón «Fotos y partes».</p>')
   +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button><button class="bt" data-a="guardarm" data-id="'+(m?m.id:'')+'">Guardar</button></div>',sedeCol())}
 function guardarM(id){const n=$('#mn').value.trim();if(!n){msg('Escribe el nombre.');return}
+ const sv=$('#msc').value;let sec=sv=='__otra'?$('#mso').value.trim():sv;const cn=SECC.find(x=>x.toLowerCase()==sec.toLowerCase());if(cn)sec=cn;
  const cols=cl(parseInt($('#mcn').value)||4,1,MAXC),mf=$('#mfn'),ic=$('#mi').value.trim()||'box';
  if(id){const m=getM(id),L=prodsOf(id),mc=Math.max(0,...L.map(p=>p.c+p.sx));
   if(cols<mc){msg('Hay productos hasta la columna '+mc+'. Muévelos antes de reducir las columnas.');return}
   let fil=+m.filas;
   if(mf&&!(m.partes||[]).length){fil=cl(parseInt(mf.value)||1,1,MAXF);const mx=Math.max(0,...L.map(p=>p.r+p.sy));if(fil<mx){msg('Hay productos hasta la fila '+mx+'. Muévelos antes de reducir las filas.');return}}
-  if(m.cols!=cols||m.filas!=fil)UNDO=[];Object.assign(m,{nombre:n,icono:ic,cols,filas:fil})}
- else DB.mos.push({id:rid(),sede:SEDE,estado:'ACTIVO',nombre:n,icono:ic,cols,filas:cl(parseInt(mf.value)||4,1,MAXF),foto:'',fotos:[],partes:[]});
+  if(m.cols!=cols||m.filas!=fil)UNDO=[];Object.assign(m,{nombre:n,icono:ic,cols,filas:fil,seccion:sec})}
+ else DB.mos.push({id:rid(),sede:SEDE,estado:'ACTIVO',seccion:sec,nombre:n,icono:ic,cols,filas:cl(parseInt(mf.value)||4,1,MAXF),foto:'',fotos:[],partes:[]});
  save();cerrar();R()}
 /* Fotos y partes: foto general y partes (cada parte = su propia cuadrícula de productos) */
 function formF(m){PT=(m.partes||[]).map(x=>({...x}));FT=genFoto(m);const dv=/^data:/i.test(FT);
  modal('<button class="x" data-a="cerrar">×</button><h3>Fotos y partes</h3><p class="ds"><b>'+ico(m)+' '+E(m.nombre)+'</b></p>'
-  +'<label>Foto general del mostrario (enlace)<input id="fe" type="text" value="'+E(dv?'':FT)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'https://...')+'"></label><div id="fv" class="pv"></div>'
+  +'<div id="fz"><label>Foto general del mostrario (arrastra la foto o pega un enlace)<input id="fe" type="text" value="'+E(dv?'':FT)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'https://...')+'"></label><div id="fv" class="pv"></div><div class="upg"><button class="upb" data-a="subir" data-k="g" data-v="0">Subir imagen</button></div></div>'
   +'<div class="ptsec" id="ptsec"><b>Partes del mostrario</b><p class="ds">¿Es muy largo? Divídelo en partes (Parte 1, Parte 2…). Cada parte tiene su propia cuadrícula y, si quieres, su foto. Podrás pasar productos de una parte a otra arrastrándolos. Si quitas una parte con productos, estos pasan a la primera parte.</p><div id="pts"></div><button class="bt s" data-a="addparte" style="margin-top:8px">+ Agregar parte</button></div>'
   +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button><button class="bt" data-a="guardarf" data-id="'+m.id+'">Guardar</button></div>',sedeCol());prevF();drawPartes()}
 function guardarF(id){const m=getM(id),ft=String(FT||'').trim();
@@ -528,7 +543,7 @@ document.addEventListener('click',e=>{closePm();const t=e.target.closest('[data-
  const a=t.dataset.a,id=t.dataset.id,v=+t.dataset.v;
  if(a=='pickic'){const i=$('#mi');if(i){i.value=t.dataset.v2;document.querySelectorAll('.ip button').forEach(b=>b.classList.toggle('sel',b===t))}}
  else if(a=='ojo'){const i=$('#mp');if(i){const ver=i.type=='password';i.type=ver?'text':'password';t.innerHTML=ver?OJO_OFF:OJO_ON;t.title=ver?'Ocultar clave':'Mostrar clave';i.focus()}}
- else if(a=='sede'){const nv=t.dataset.v;SEDE=nv;MOS=null;Q='';
+ else if(a=='sede'){const nv=t.dataset.v;SEDE=nv;MOS=null;Q='';SECF='';
   if(MASTER&&MSEDE&&MSEDE!==nv){MASTER=false;if(URL_API){flush().then(()=>{CLAVE='';MSEDE='';try{sessionStorage.removeItem('mm');sessionStorage.removeItem('mk');sessionStorage.removeItem('ms')}catch(_){}return cargar()}).then(R)}else{CLAVE='';MSEDE='';try{sessionStorage.removeItem('mm');sessionStorage.removeItem('mk');sessionStorage.removeItem('ms')}catch(_){}}}
   R()}
  else if(a=='atras'&&!SEDE){location.href=URL_CAMPUS}
@@ -547,10 +562,22 @@ document.addEventListener('click',e=>{closePm();const t=e.target.closest('[data-
  else if(a=='cerrarlb')$('#lb').style.display='none'
  else if(a=='lbprev')lbMove(-1)
  else if(a=='lbnext')lbMove(1)
+ else if(a=='lbzp')lzSet(LZ.s*1.4,LZ.x,LZ.y)
+ else if(a=='lbzm')lzSet(LZ.s/1.4,LZ.x,LZ.y)
+ else if(a=='lbz0')lzSet(1,0,0)
+ else if(a=='cvc'){ENC='';drawCover()}
+ else if(a=='cvzp')encStep(1.15)
+ else if(a=='cvzm')encStep(1/1.15)
+ else if(a=='secf'){SECF=t.dataset.s||'';R()}
+ else if(a=='dlgen')confDl('¿Desea descargar la vista general de «'+((getM(id)||{}).nombre||'')+'»?','dlgenok',id)
+ else if(a=='dlsec')confDl(SECF?'¿Desea descargar todos los mostrarios de «'+(SECF=='__none'?'Sin sección':SECF)+'»?':'¿Desea descargar todos los mostrarios de la sede?','dlsecok','')
+ else if(a=='dlgenok'){$('#md').style.display='none';dlGen(id)}
+ else if(a=='dlsecok'){$('#md').style.display='none';dlSec()}
  /* campos de fotos del producto */
+ else if(a=='subir'){UPT={k:t.dataset.k,i:v||0};fu.click()}
  else if(a=='addfoto'){if(FM.length>=6){toast('Máximo 6 fotos por producto');return}FM.push('');drawFotos();const ins=document.querySelectorAll('#fth input');if(ins.length)ins[ins.length-1].focus()}
  else if(a=='delf'){FM.splice(v,1);if(!FM.length)FM.push('');drawFotos()}
- else if(a=='portada'){const[x]=FM.splice(v,1);FM.unshift(x);drawFotos()}
+ else if(a=='portada'){const[x]=FM.splice(v,1);FM.unshift(x);ENC='';drawFotos()}
  else if(a=='fup'){const[x]=FM.splice(v,1);FM.splice(v-1,0,x);drawFotos()}
  else if(a=='fdn'){const[x]=FM.splice(v,1);FM.splice(v+1,0,x);drawFotos()}
  /* partes */
@@ -592,6 +619,8 @@ document.addEventListener('click',e=>{closePm();const t=e.target.closest('[data-
  else if(a=='restp')restaurarP(id)});
 document.addEventListener('input',e=>{const t=e.target;
  if(t.id=='q'){Q=t.value.trim();const p=t.selectionStart;R();const i=$('#q');i.focus();i.setSelectionRange(p,p);return}
+ if(t.id=='pc')codSug(t.value);
+ if(t.id=='pc'||t.id=='pn')cvTxt();
  if(t.id=='fe'){FT=t.value.trim();clearTimeout(prevF.t);prevF.t=setTimeout(prevF,500)}
  const d=t.dataset||{};
  if(d.fi!=null){const i=+d.fi;FM[i]=t.value;const im=t.closest('.fr').querySelector('img');clearTimeout(im._t);im._t=setTimeout(()=>setThumb(im,t.value),500)}
@@ -626,6 +655,122 @@ document.addEventListener('pointermove',e=>{if(RS){e.preventDefault();moveRS(e);
 document.addEventListener('pointerup',()=>{if(RS){finRS();return}if(!DG)return;const d=DG,tg=d.tg;endDrag();if(d.on){SUP=true;setTimeout(()=>SUP=false,150);if(tg&&tg.id!=d.id)mover(d.id,tg)}});
 document.addEventListener('pointercancel',()=>{if(RS)finRS(true);endDrag()});
 
+/* ===== Subir imágenes a Google Drive (arrastrar, elegir o tomar foto) ===== */
+let UPT=null;
+const fu=document.createElement('input');fu.type='file';fu.accept='image/*';fu.style.display='none';document.body.appendChild(fu);
+fu.addEventListener('change',()=>{const f=fu.files&&fu.files[0];fu.value='';if(f&&UPT)subirA(UPT,f)});
+function comprimir(f){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),im=new Image();
+ im.onload=()=>{URL.revokeObjectURL(u);const k=Math.min(1,1400/Math.max(im.naturalWidth,im.naturalHeight)),w=Math.round(im.naturalWidth*k),h=Math.round(im.naturalHeight*k),c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);ok(c.toDataURL('image/jpeg',.82).split(',')[1])};
+ im.onerror=()=>{URL.revokeObjectURL(u);no(new Error('LEER'))};im.src=u})}
+async function subirA(T,f){
+ if(!/^image\//i.test(f.type||'')){msg('Ese archivo no es una imagen.');return}
+ if(!MASTER){msg('Solo el modo master puede subir imágenes.');return}
+ document.querySelectorAll('.upb').forEach(b=>b.disabled=true);msg('');toast('Subiendo imagen…');
+ try{const b64=await comprimir(f);let url;
+  if(URL_API){const j=await api({action:'upload',clave:CLAVE,sede:SEDE,nombre:f.name||'foto.jpg',datos:b64});url=j.url}
+  else url='data:image/jpeg;base64,'+b64;
+  if(T.k=='f'){FM[T.i]=url;drawFotos()}
+  else if(T.k=='p'&&PT[T.i]){PT[T.i].foto=url;drawPartes()}
+  else if(T.k=='g'){FT=url;const e=$('#fe');if(e)e.value=url;prevF()}
+  toast('Imagen subida. Pulsa Guardar para aplicarla.');return true
+ }catch(err){const m=err.message;msg(m=='LEER'?'No se pudo leer la imagen. Prueba con otra.':m=='CLAVE'?'La sesión master venció. Sal y vuelve a entrar.':m=='Acción no válida'?'Falta actualizar el Apps Script (acción upload).':'No se pudo subir: '+m)}
+ finally{document.querySelectorAll('.upb').forEach(b=>b.disabled=false)}}
+function slotLibre(){let i=FM.findIndex(x=>!String(x||'').trim());if(i<0&&FM.length<6){FM.push('');i=FM.length-1;drawFotos()}return i}
+function dzMark(el){document.querySelectorAll('.dz').forEach(x=>x.classList.remove('dz'));if(el)el.classList.add('dz')}
+const dzFiles=e=>e.dataTransfer&&[...e.dataTransfer.types||[]].includes('Files');
+document.addEventListener('dragover',e=>{if(!dzFiles(e))return;e.preventDefault();dzMark($('#md').style.display=='flex'&&e.target.closest?e.target.closest('.fr,#fz'):null)});
+document.addEventListener('dragleave',e=>{if(!e.relatedTarget)dzMark(null)});
+document.addEventListener('drop',async e=>{if(!dzFiles(e))return;e.preventDefault();dzMark(null);
+ if($('#md').style.display!='flex'||!MASTER)return;
+ const fs=[...e.dataTransfer.files].filter(f=>/^image\//i.test(f.type));if(!fs.length){msg('Ese archivo no es una imagen.');return}
+ const row=e.target.closest('.fr'),fi=row&&row.querySelector('[data-fi]'),pf=row&&row.querySelector('[data-pf]');let T=null;
+ if(fi)T={k:'f',i:+fi.dataset.fi};else if(pf)T={k:'p',i:+pf.dataset.pf};else if(e.target.closest('#fz'))T={k:'g',i:0};
+ else if($('#fth')){const i=slotLibre();if(i<0){msg('Máximo 6 fotos por producto.');return}T={k:'f',i}}
+ if(!T)return;
+ for(let n=0;n<fs.length;n++){if(n>0){if(T.k!='f')break;const i=slotLibre();if(i<0){msg('Máximo 6 fotos por producto.');break}T={k:'f',i}}
+  if(!(await subirA(T,fs[n])))break}});
+/* ===== Código -> nombre sugerido (hoja Descripciones) ===== */
+let SUG={t:null,auto:''};
+function codSug(v){clearTimeout(SUG.t);v=String(v||'').trim();const h=$('#pcs');if(h)h.textContent='';if(v.length<4||!URL_API||!MASTER)return;
+ SUG.t=setTimeout(async()=>{const st=(t,c)=>{const h=$('#pcs');if(h){h.style.color=c;h.textContent=t}};
+  try{const j=await api({action:'desc',clave:CLAVE,sede:SEDE,codigo:v}),pc=$('#pc');if(!pc||pc.value.trim()!=v)return;const n=$('#pn');
+   if(j.nombre){if(n&&(!n.value.trim()||n.value==SUG.auto)){n.value=j.nombre.slice(0,120);SUG.auto=n.value;cvTxt()}st('Nombre completado desde la hoja Descripciones','#0b5d1f')}
+   else st('Ese código no está en la hoja Descripciones','#be123c')}
+  catch(e){st(e.message=='Acción no válida'?'Falta actualizar el Apps Script (acción desc)':'','#be123c')}},500)}
+/* ===== Secciones, filtros y descargas ===== */
+const SECC=['Ventanilla','Drywall','Puertas','Maderas','Techos','Pisos laminados','Melamina','Triplay'];
+let SECF='';const secDe=m=>String(m.seccion||'').trim();
+const secOk=m=>!SECF||(SECF=='__none'?!secDe(m):secDe(m).toLowerCase()==SECF.toLowerCase());
+function secSel(m){const s=m?secDe(m):'',otra=s&&SECC.indexOf(s)<0;
+ return '<label>Sección del mostrario<select id="msc"><option value="">Sin sección</option>'+SECC.map(x=>'<option'+(x==s?' selected':'')+'>'+x+'</option>').join('')+'<option value="__otra"'+(otra?' selected':'')+'>Otra (escribir)…</option></select></label><input id="mso" type="text" maxlength="40" placeholder="Escribe la sección" value="'+E(otra?s:'')+'" style="margin-top:6px;'+(otra?'':'display:none')+'">'}
+document.addEventListener('change',e=>{if(e.target.id=='msc'){const o=$('#mso');o.style.display=e.target.value=='__otra'?'block':'none';if(e.target.value=='__otra')o.focus()}});
+function chipsSec(L){const c={};let sin=0;L.forEach(m=>{const s=secDe(m);if(s)c[s]=(c[s]||0)+1;else sin++});
+ const ks=Object.keys(c).sort((a,b)=>{const i=SECC.indexOf(a),j=SECC.indexOf(b);return (i<0?99:i)-(j<0?99:j)||a.localeCompare(b)});
+ if(SECF&&!(SECF=='__none'?sin:c[SECF]))SECF='';if(!ks.length)return '';
+ const B=(v,t,n)=>'<button class="sc'+(SECF==v?' on':'')+'" data-a="secf" data-s="'+E(v)+'">'+E(t)+'<small>'+n+'</small></button>';
+ return '<div class="secs">'+B('','Todas',L.length)+ks.map(k=>B(k,k,c[k])).join('')+(sin?B('__none','Sin sección',sin):'')+'</div>'}
+function secBar(L){const n=L.filter(secOk).filter(m=>genFoto(m)).length;if(!n)return '';
+ return '<div style="margin:0 0 12px"><button class="bt s w" data-a="dlsec">'+(SECF?'Descargar todos los mostrarios de «'+E(SECF=='__none'?'Sin sección':SECF)+'»':'Descargar todos los mostrarios de la sede')+' ('+n+')</button></div>'}
+function mCard(m){const g=genFoto(m),t=String(g).replace(/sz=w\d+/,'sz=w500');
+ return '<div class="mcw"><button class="mc2 v" data-a="abrir" data-id="'+m.id+'">'+(g?'<img class="mgi" src="'+E(t)+'" alt="" loading="lazy" referrerpolicy="no-referrer">':'<div class="mgi"></div>')+'<span class="mct"><i>'+ico(m)+'</i><span>'+E(m.nombre)+'<small>'+nReal(m.id)+' productos'+(secDe(m)?' · '+E(secDe(m)):'')+'</small></span></span></button>'+(g?'<button class="dlb" data-a="dlgen" data-id="'+m.id+'">Descargar vista general</button>':'')+'</div>'}
+const dlNom=m=>(SEDE+' - '+m.nombre).replace(/[\\/:*?"<>|]+/g,'').trim();
+const dlExt=b=>((b.type.split('/')[1]||'jpg').replace('jpeg','jpg').replace(/[^a-z0-9]/gi,''))||'jpg';
+async function imgBlob(u){u=String(u||'').trim();const id=(u.match(/[?&]id=([\w-]{20,})/)||u.match(/\/d\/([\w-]{20,})/)||[])[1];
+ try{const r=await fetch(id?'https://lh3.googleusercontent.com/d/'+id+'=w2000':u);if(r.ok){const b=await r.blob();if(/^image\//.test(b.type))return b}}catch(e){}
+ if(id&&URL_API){const j=await api({action:'img',id}),bin=atob(j.datos),a=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return new Blob([a],{type:j.tipo||'image/jpeg'})}
+ throw new Error('img')}
+function guardaBlob(b,n){const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},4000)}
+async function dlGen(id){const m=getM(id),u=m&&genFoto(m);if(!u)return;toast('Descargando…');
+ try{const b=await imgBlob(u);guardaBlob(b,dlNom(m)+' - Vista general.'+dlExt(b));toast('Imagen descargada')}
+ catch(e){window.open(u,'_blank');toast('Se abrió la imagen en otra pestaña: guárdala desde ahí.')}}
+function confDl(txt,acc,id){modal('<button class="x" data-a="cerrar">×</button><h3>'+E(txt)+'</h3><div class="fx"><button class="bt w" data-a="cerrar">No</button><button class="bt" data-a="'+acc+'" data-id="'+id+'">Sí, descargar</button></div>')}
+function cargaZip(){return window.JSZip?Promise.resolve():new Promise((ok,no)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';s.onload=ok;s.onerror=()=>no(new Error('zip'));document.head.appendChild(s)})}
+async function dlSec(){const L=mosSede().filter(secOk).filter(m=>genFoto(m));if(!L.length){toast('No hay imágenes para descargar.');return}
+ toast('Preparando descarga…');try{await cargaZip()}catch(e){toast('No se pudo preparar el ZIP. Revisa tu conexión.');return}
+ const z=new JSZip(),us={};let ok=0,mal=0;
+ for(const m of L){try{const b=await imgBlob(genFoto(m)),n=dlNom(m),k=us[n]=(us[n]||0)+1;z.file(n+(k>1?' ('+k+')':'')+'.'+dlExt(b),b);ok++}catch(e){mal++}toast('Preparando… '+(ok+mal)+' de '+L.length)}
+ if(!ok){toast('No se pudo descargar ninguna imagen.');return}
+ const nz=SEDE+' - '+(SECF=='__none'?'Sin sección':SECF||'Todos los mostrarios');
+ guardaBlob(await z.generateAsync({type:'blob'}),nz.replace(/[\\/:*?"<>|]+/g,'')+'.zip');toast(mal?'Listo. '+mal+' imagen(es) no se pudieron incluir.':'Descarga lista')}
+/* ===== Encuadre de la portada: mover y agrandar/achicar (solo cambia la vista, no recorta) ===== */
+let ENC='',ENCID='',CVD=null;
+function encParse(s){const q=String(s||'').trim().split(/\s+/),n=i=>parseFloat(q[i]);return{x:isNaN(n(0))?50:n(0),y:isNaN(n(1))?50:n(1),z:isNaN(n(2))||n(2)<.2?1:n(2)}}
+function encStr(o){const x=Math.round(o.x),y=Math.round(o.y),z=Math.round(o.z*100)/100;return x==50&&y==50&&z==1?'':x+'% '+y+'% '+z}
+function encCss(s){const o=encParse(s);return 'object-position:'+o.x+'% '+o.y+'%;transform:scale('+o.z+');transform-origin:'+o.x+'% '+o.y+'%'}
+function encZ(o,w,h,nw,nh,z2){const a=w/nw,b=h/nh,kc=Math.max(a,b);z2=Math.max(Math.max(.2,Math.min(a,b)/kc),Math.min(6,z2));
+ const f=(p,w,S0,S1)=>{const u=(w/2-p/100*(w-S0))/S0;return S1-w>1?Math.max(0,Math.min(100,100*(w/2-u*S1)/(w-S1))):50};
+ return{x:f(o.x,w,nw*kc*o.z,nw*kc*z2),y:f(o.y,h,nh*kc*o.z,nh*kc*z2),z:z2}}
+function encP(o,w,h,nw,nh,dx,dy){const kc=Math.max(w/nw,h/nh),ox=nw*kc*o.z-w,oy=nh*kc*o.z-h,c=v=>Math.max(0,Math.min(100,v));
+ return{x:ox>1?c(o.x-dx/ox*100):50,y:oy>1?c(o.y-dy/oy*100):50,z:o.z}}
+function encApply(){document.querySelectorAll('#cvb img,#cvp img').forEach(i=>i.style.cssText=encCss(ENC))}
+function encStep(f){const b=$('#cvb');if(!b)return;const im=b.querySelector('img'),o=encParse(ENC);ENC=encStr(encZ(o,b.clientWidth,b.clientHeight,im.naturalWidth||1,im.naturalHeight||1,o.z*f));encApply()}
+/* medidas reales de la imagen del casillero tal como la ve el usuario (vista sin master) */
+function encGeo(){const p=ENCID?getP(ENCID):null,sx=p?+p.sx||1:1,sy=p?+p.sy||1:1,g=document.querySelector('.gr:not(.big)');if(!g)return{w:176,r:1.44};
+ const n=+getComputedStyle(g).getPropertyValue('--n')||4,cw=(g.clientWidth-(n-1)*8)/n,nar=innerWidth<=600,rh=Math.round(cw*.62+(nar?32:74)),
+  iw=cw*sx+8*(sx-1)-4,ih=rh*sy+8*(sy-1)-4-(nar?22:60);return{w:Math.round(iw),r:Math.max(.6,Math.min(2.6,iw/Math.max(30,ih)))}}
+function cvTxt(){const a=$('#cvcd'),b=$('#cvnm'),c=$('#pc'),n=$('#pn');if(a)a.textContent=(c&&c.value.trim())||'CÓDIGO';if(b)b.textContent=(n&&n.value.trim())||'Nombre del producto'}
+function drawCover(){const v=$('#cvr');if(!v)return;const f=String(FM[0]||'').trim();if(!okImg(f)){v.innerHTML='';return}
+ const G=encGeo(),W=Math.max(110,Math.min(200,G.w)),H=Math.round(W/G.r),EW=230,EH=Math.round(EW/G.r),
+  I='<img src="'+E(f)+'" alt="" draggable="false" referrerpolicy="no-referrer" style="'+encCss(ENC)+'">';
+ v.innerHTML='<label style="margin-top:14px">Centrar y encuadrar la portada</label><p class="ds" style="margin:2px 0 8px;font-size:12.5px">Arrastra la foto para moverla. Agrándala o achícala con los cuadritos de las esquinas, los botones − y + o la rueda del mouse. Si la achicas verás la foto más completa. Solo cambia cómo se muestra; la foto no se recorta.</p>'
+  +'<div class="cvw"><div><div class="cv" id="cvb" style="width:'+EW+'px;height:'+EH+'px">'+I+'<i class="cvh" data-c="nw"></i><i class="cvh" data-c="ne"></i><i class="cvh" data-c="sw"></i><i class="cvh" data-c="se"></i></div>'
+  +'<div class="fb" style="margin-top:8px"><button class="bt s w" data-a="cvzm" title="Achicar">−</button><button class="bt s w" data-a="cvzp" title="Agrandar">+</button><button class="bt s w" data-a="cvc">Centrar de nuevo</button></div></div>'
+  +'<div><div class="sidet" style="text-align:left;margin-bottom:4px">Así lo verá el usuario</div><div class="tl" id="cvp" style="width:'+(W+4)+'px;cursor:default"><div class="im" style="flex:none;height:'+H+'px">'+I+'</div><div class="cd" id="cvcd"></div><div class="nm" id="cvnm"></div></div></div></div>';cvTxt()}
+document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#cvb');if(!b)return;const h=e.target.closest('.cvh'),r=b.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
+ CVD={m:h?'z':'p',im:b.querySelector('img'),x:e.clientX,y:e.clientY,o:encParse(ENC),w:b.clientWidth,h:b.clientHeight,d0:Math.max(8,Math.hypot(e.clientX-cx,e.clientY-cy)),cx,cy};e.preventDefault()});
+document.addEventListener('pointermove',e=>{if(!CVD)return;const d=CVD,nw=d.im.naturalWidth||1,nh=d.im.naturalHeight||1;
+ const o=d.m=='z'?encZ(d.o,d.w,d.h,nw,nh,d.o.z*Math.hypot(e.clientX-d.cx,e.clientY-d.cy)/d.d0):encP(d.o,d.w,d.h,nw,nh,e.clientX-d.x,e.clientY-d.y);ENC=encStr(o);encApply()});
+document.addEventListener('pointerup',()=>{CVD=null});document.addEventListener('pointercancel',()=>{CVD=null});
+document.addEventListener('wheel',e=>{if(e.target.closest&&e.target.closest('#cvb')){e.preventDefault();encStep(e.deltaY<0?1.1:1/1.1)}},{passive:false});
+/* ===== Visor de imágenes: acercar / alejar (botones, rueda, pellizco y arrastre) ===== */
+let LZ={s:1,x:0,y:0},LP=new Map();
+function lzSet(s,x,y){s=Math.max(1,Math.min(6,s));if(s==1){x=0;y=0}LZ={s,x,y};const i=$('#lbi');if(i){i.style.transform='translate('+x+'px,'+y+'px) scale('+s+')';i.style.cursor=s>1?'grab':'default'}const z=$('#lbz0');if(z)z.textContent=Math.round(s*100)+'%'}
+document.addEventListener('pointerdown',e=>{if(e.target.id!='lbi')return;LP.set(e.pointerId,{x:e.clientX,y:e.clientY});try{e.target.setPointerCapture(e.pointerId)}catch(_){}});
+document.addEventListener('pointermove',e=>{const o=LP.get(e.pointerId);if(!o)return;
+ if(LP.size==2){const a=[...LP.values()],d0=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);LP.set(e.pointerId,{x:e.clientX,y:e.clientY});const b=[...LP.values()],d1=Math.hypot(b[0].x-b[1].x,b[0].y-b[1].y);if(d0>0)lzSet(LZ.s*d1/d0,LZ.x,LZ.y);return}
+ LP.set(e.pointerId,{x:e.clientX,y:e.clientY});if(LZ.s>1)lzSet(LZ.s,LZ.x+e.clientX-o.x,LZ.y+e.clientY-o.y)});
+document.addEventListener('pointerup',e=>LP.delete(e.pointerId));document.addEventListener('pointercancel',e=>LP.delete(e.pointerId));
+$('#lb').addEventListener('wheel',e=>{e.preventDefault();lzSet(LZ.s*(e.deltaY<0?1.2:1/1.2),LZ.x,LZ.y)},{passive:false});
 addEventListener('scroll',closePm,{passive:true});
 if(URL_API){$('#app').innerHTML='<p class="sub" style="margin-top:80px">Cargando…</p>';
  cargar().then(ok=>{if(ok)R();else $('#app').innerHTML='<p class="sub" style="margin-top:80px">No se pudo conectar con Google Sheets.</p><p style="text-align:center"><button class="bt" onclick="location.reload()">Reintentar</button></p>'})}
