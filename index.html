@@ -92,6 +92,7 @@ h1{margin:10px 0 4px;text-align:center;font-size:38px;color:#0b5d1f}
 .ec{position:relative;border:2px dashed #c3d5c8;border-radius:12px;background:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;color:#9fb3a6;font-size:24px;font-weight:800;cursor:pointer;user-select:none}
 .ec.q{border:0;background:rgba(0,0,0,.035);cursor:default}
 .ec.dtg{border-color:#2563eb;background:rgba(37,99,235,.16)}
+.ec.dz{border-color:#2563eb;border-style:solid;background:rgba(37,99,235,.16);color:#2563eb;outline:3px dashed #2563eb;outline-offset:2px}
 /* destellos al mover / encontrar */
 .tl.dsrc{opacity:.3;outline:3px dashed #2563eb;outline-offset:-3px}
 .tl.dtg{box-shadow:-8px 0 0 0 #2563eb,0 0 0 4px rgba(37,99,235,.35);transform:scale(1.03);z-index:5}
@@ -413,7 +414,7 @@ function tile(p,m,o){o=o||{};const st=o.pos?' style="--c0:'+(p.c+1)+';--r0:'+(p.
  mv=fl?'<span class="mvb">↔ Movido aquí</span>':f2?'<span class="mvb s2">← Aquí estaba</span>':fd?'<span class="mvb f">Aquí está</span>':'',
  fc=(fl?' flash':'')+(f2?' flash2':'')+(fd?' find':'')+(o.dim?' dim':'')+(o.hit?' hit':'')+(o.ed?' ed':'');
  const ag=+p.agotado,pe=MASTER?pend(p.id):0,F=fotosP(p);
- return '<div class="tl'+(ag?' ag':'')+fc+'" data-a="ver" data-id="'+p.id+'"'+st+'><div class="im"><img src="'+E(F[0])+'" alt="'+E(p.codigo)+'"'+(p.enc?' style="'+encCss(p.enc)+'"':'')+' loading="lazy" draggable="false" referrerpolicy="no-referrer">'+(MASTER&&o.pos?'<span class="pos">F'+(p.r+1)+'·C'+(p.c+1)+'</span>':'')+(ag?'<span class="bdg">AGOTADO</span>':'')+(F.length>1?'<span class="bdg p">'+F.length+'</span>':'')+(pe?'<span class="bdg w">'+pe+'</span>':'')+'</div>'
+ return '<div class="tl'+(ag?' ag':'')+fc+'" data-a="ver" data-id="'+p.id+'"'+st+'><div class="im"><img src="'+E(F[0])+'" alt="'+E(p.codigo)+'"'+(p.enc?' data-enc="'+E(p.enc)+'" style="'+encCss(p.enc)+'"':'')+' loading="lazy" draggable="false" referrerpolicy="no-referrer">'+(MASTER&&o.pos?'<span class="pos">F'+(p.r+1)+'·C'+(p.c+1)+'</span>':'')+(ag?'<span class="bdg">AGOTADO</span>':'')+(F.length>1?'<span class="bdg p">'+F.length+'</span>':'')+(pe?'<span class="bdg w">'+pe+'</span>':'')+'</div>'
   +(o.etq?'<div class="lbl">'+ico(m)+' '+E(m.nombre)+'</div>':'')+'<div class="cd">'+E(p.codigo)+'</div><div class="nm">'+E(p.nombre)+'</div>'+(o.ed?ctrl(p):'')+mv+(o.ed?nodos():'')+'</div>'}
 function celdaV(r,c,ed,f2,badge,s){return '<div class="ec'+(ed?'':' q')+(f2?' flash2':'')+'" data-r="'+r+'" data-c="'+c+'" data-s="'+E(s)+'" style="--c0:'+(c+1)+';--r0:'+(r+1)+';--sx:1;--sy:1"'+(ed?' data-a="addaqui" title="Añadir un producto aquí"':'')+'>'+(ed?'＋':'')+(badge?'<span class="mvb s2">← Aquí estaba</span>':'')+'</div>'}
 function sideHtml(m){const it=fotosM(m),P=m.partes||[],falta=MASTER&&!genFoto(m);if(!it.length&&!MASTER)return '';
@@ -513,7 +514,7 @@ function formP(p,pre,sid){FM=p?fotosP(p).slice():[''];PRE=pre||null;ENC=p&&p.enc
   +'<label><input id="pa" type="checkbox" '+(p&&+p.agotado?'checked':'')+'> Marcar como agotado</label>'
   +'<label style="margin-top:14px">Fotos del producto (enlaces). La primera es la portada.</label><div id="fth"></div><button class="bt s w" data-a="addfoto" style="margin-top:8px">+ Agregar más fotos</button><div id="cvr"></div>'
   +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button>'+(p?'':'<button class="bt w" data-a="dejarvacio" title="No pongas producto: este espacio queda en gris y se puede mover y agrandar como un producto">Dejar espacio vacío</button>')+'<button class="bt" data-a="guardarp" data-id="'+(p?p.id:'')+'">Guardar</button></div>',sedeCol());drawFotos()}
-function guardarP(id){if($('#pn')&&$('#pn').readOnly){msg('Espera: estoy identificando el producto…');return}const c=$('#pc').value.trim().toUpperCase(),n=$('#pn').value.trim();if(!c||!n){msg('Escribe el código y el nombre.');return}
+function guardarP(id){if(SUBIENDO>0){msg('Espera un momento: la imagen se está subiendo…');return}if($('#pn')&&$('#pn').readOnly){msg('Espera: estoy identificando el producto…');return}const c=$('#pc').value.trim().toUpperCase(),n=$('#pn').value.trim();if(!c||!n){msg('Escribe el código y el nombre.');return}
  const raw=FM.map(s=>String(s||'').trim());for(let i=0;i<raw.length;i++)if(raw[i]&&!okImg(raw[i])){msg('La foto '+(i+1)+' no es un enlace válido (debe empezar con https://).');return}
  const fs=raw.filter(Boolean);if(!fs.length){msg('Agrega al menos una foto (enlace).');return}
  const d={codigo:c,nombre:n,desc:$('#pd').value.trim(),agotado:$('#pa').checked?1:0,fotos:fs,foto:fs[0],enc:ENC},sel=$('#pp'),ns=sel?sel.value:'';let aviso='';
@@ -784,7 +785,7 @@ document.addEventListener('pointerup',()=>{if(RS){finRS();return}if(!DG)return;c
 document.addEventListener('pointercancel',()=>{if(RS)finRS(true);endDrag()});
 
 /* ===== Subir imágenes a Google Drive (arrastrar, elegir o tomar foto) ===== */
-let UPT=null;
+let UPT=null,SUBIENDO=0;
 const fu=document.createElement('input');fu.type='file';fu.accept='image/*';fu.style.display='none';document.body.appendChild(fu);
 fu.addEventListener('change',()=>{const f=fu.files&&fu.files[0];fu.value='';if(f&&UPT)subirA(UPT,f)});
 function comprimir(f){return new Promise((ok,no)=>{const u=URL.createObjectURL(f),im=new Image();
@@ -793,7 +794,7 @@ function comprimir(f){return new Promise((ok,no)=>{const u=URL.createObjectURL(f
 async function subirA(T,f){
  if(!/^image\//i.test(f.type||'')){msg('Ese archivo no es una imagen.');return}
  if(!MASTER){msg('Solo el modo master puede subir imágenes.');return}
- document.querySelectorAll('.upb').forEach(b=>b.disabled=true);msg('');toast('Subiendo imagen…');
+ SUBIENDO++;document.querySelectorAll('.upb').forEach(b=>b.disabled=true);msg('');toast('Subiendo imagen…');
  try{const b64=await comprimir(f);let url;
   if(URL_API){const j=await api({action:'upload',clave:CLAVE,sede:SEDE,nombre:f.name||'foto.jpg',datos:b64});url=j.url}
   else url='data:image/jpeg;base64,'+b64;
@@ -802,15 +803,23 @@ async function subirA(T,f){
   else if(T.k=='g'){FT=url;const e=$('#fe');if(e)e.value=url;prevF()}
   toast('Imagen subida. Pulsa Guardar para aplicarla.');return true
  }catch(err){const m=err.message;msg(m=='LEER'?'No se pudo leer la imagen. Prueba con otra.':m=='CLAVE'?'La sesión master venció. Sal y vuelve a entrar.':m=='Acción no válida'?'Falta actualizar el Apps Script (acción upload).':'No se pudo subir: '+m)}
- finally{document.querySelectorAll('.upb').forEach(b=>b.disabled=false)}}
+ finally{SUBIENDO=Math.max(0,SUBIENDO-1);document.querySelectorAll('.upb').forEach(b=>b.disabled=false)}}
 document.addEventListener('paste',e=>{if($('#md').style.display!='flex'||!MASTER||!$('#fz'))return;const it=[...((e.clipboardData&&e.clipboardData.items)||[])].find(i=>/^image\//.test(i.type));if(!it)return;const f=it.getAsFile();if(f){e.preventDefault();subirA({k:'g',i:0},f)}});
 function slotLibre(){let i=FM.findIndex(x=>!String(x||'').trim());if(i<0&&FM.length<6){FM.push('');i=FM.length-1;drawFotos()}return i}
 function dzMark(el){document.querySelectorAll('.dz').forEach(x=>x.classList.remove('dz'));if(el)el.classList.add('dz')}
 const dzFiles=e=>e.dataTransfer&&[...e.dataTransfer.types||[]].includes('Files');
-document.addEventListener('dragover',e=>{if(!dzFiles(e))return;e.preventDefault();dzMark($('#md').style.display=='flex'&&e.target.closest?e.target.closest('.fr,#fz'):null)});
+document.addEventListener('dragover',e=>{if(!dzFiles(e))return;e.preventDefault();dzMark(e.target.closest?($('#md').style.display=='flex'?e.target.closest('.fr,#fz'):(MASTER?e.target.closest('.ec[data-a="addaqui"]'):null)):null)});
 document.addEventListener('dragleave',e=>{if(!e.relatedTarget)dzMark(null)});
 document.addEventListener('drop',async e=>{if(!dzFiles(e))return;e.preventDefault();dzMark(null);
- if($('#md').style.display!='flex'||!MASTER)return;
+ if($('#md').style.display!='flex'){
+  const ec=MASTER&&e.target.closest?e.target.closest('.ec[data-a="addaqui"]'):null;if(!ec)return;
+  const ims=[...e.dataTransfer.files].filter(f=>/^image\//i.test(f.type));if(!ims.length){toast('Ese archivo no es una imagen.');return}
+  formP(null,{r:+ec.dataset.r,c:+ec.dataset.c,s:ec.dataset.s||''},ec.dataset.s||'');
+  setTimeout(()=>{const c=$('#pc');if(c)c.focus()},60);
+  for(let n=0;n<ims.length;n++){let T={k:'f',i:0};if(n>0){const i=slotLibre();if(i<0){msg('Máximo 6 fotos por producto.');break}T={k:'f',i}}
+   if(!(await subirA(T,ims[n])))break}
+  return}
+ if(!MASTER)return;
  const fs=[...e.dataTransfer.files].filter(f=>/^image\//i.test(f.type));if(!fs.length){msg('Ese archivo no es una imagen.');return}
  const row=e.target.closest('.fr'),fi=row&&row.querySelector('[data-fi]'),pf=row&&row.querySelector('[data-pf]');let T=null;
  if(fi)T={k:'f',i:+fi.dataset.fi};else if(pf)T={k:'p',i:+pf.dataset.pf};else if(e.target.closest('#fz')||($('#fz')&&!$('#fth')&&!$('#pts')))T={k:'g',i:0};
@@ -1005,7 +1014,15 @@ function encZ(o,w,h,nw,nh,z2){const a=w/nw,b=h/nh,kc=Math.max(a,b);z2=Math.max(M
  return{x:f(o.x,w,nw*kc*o.z,nw*kc*z2),y:f(o.y,h,nh*kc*o.z,nh*kc*z2),z:z2}}
 function encP(o,w,h,nw,nh,dx,dy){const kc=Math.max(w/nw,h/nh),ox=nw*kc*o.z-w,oy=nh*kc*o.z-h,c=v=>Math.max(0,Math.min(100,v));
  return{x:ox>1?c(o.x-dx/ox*100):50,y:oy>1?c(o.y-dy/oy*100):50,z:o.z}}
-function encApply(){document.querySelectorAll('#cvb img,#cvp img').forEach(i=>i.style.cssText=encCss(ENC))}
+/* Con zoom < 1 la foto debe verse COMPLETA: se dibuja con su tamaño real "cover" (sin recortarla dentro del cuadro) y luego se achica */
+function encLay(im,s){const o=encParse(s),c=im.parentElement;if(!c)return;
+ if(o.z>=1||!im.naturalWidth||!im.naturalHeight||!c.clientWidth||!c.clientHeight){im.style.cssText=encCss(s);return}
+ const ri=im.naturalWidth/im.naturalHeight,rb=c.clientWidth/c.clientHeight,W=100*Math.max(1,ri/rb),H=100*Math.max(1,rb/ri);
+ im.style.cssText='position:absolute;right:auto;bottom:auto;max-width:none;object-fit:fill;width:'+W+'%;height:'+H+'%;left:'+((100-W)*o.x/100)+'%;top:'+((100-H)*o.y/100)+'%;transform:scale('+o.z+');transform-origin:'+o.x+'% '+o.y+'%'}
+function encApply(){document.querySelectorAll('#cvb img,#cvp img').forEach(i=>encLay(i,ENC))}
+function encFixAll(){document.querySelectorAll('img[data-enc]').forEach(i=>encLay(i,i.dataset.enc));encApply()}
+document.addEventListener('load',e=>{const t=e.target;if(!t||t.tagName!='IMG')return;if(t.closest&&t.closest('#cvb,#cvp'))encApply();else if(t.dataset&&t.dataset.enc)encLay(t,t.dataset.enc)},true);
+{let q=0;const go=()=>{cancelAnimationFrame(q);q=requestAnimationFrame(encFixAll)};addEventListener('resize',go);new MutationObserver(go).observe(document.getElementById('app'),{childList:true,subtree:true})}
 function encStep(f){const b=$('#cvb');if(!b)return;const im=b.querySelector('img'),o=encParse(ENC);ENC=encStr(encZ(o,b.clientWidth,b.clientHeight,im.naturalWidth||1,im.naturalHeight||1,o.z*f));encApply()}
 /* medidas reales de la imagen del casillero tal como la ve el usuario (vista sin master) */
 function encGeo(){const p=ENCID?getP(ENCID):null,sx=p?+p.sx||1:1,sy=p?+p.sy||1:1,g=document.querySelector('.gr:not(.big)');if(!g)return{w:176,r:1.44};
@@ -1018,7 +1035,7 @@ function drawCover(){const v=$('#cvr');if(!v)return;const f=String(FM[0]||'').tr
  v.innerHTML='<label style="margin-top:14px">Centrar y encuadrar la portada</label><p class="ds" style="margin:2px 0 8px;font-size:12.5px">Arrastra la foto para moverla. Agrándala o achícala con los cuadritos de las esquinas, los botones − y + o la rueda del mouse. Si la achicas verás la foto más completa. Solo cambia cómo se muestra; la foto no se recorta.</p>'
   +'<div class="cvw"><div><div class="cv" id="cvb" style="width:'+EW+'px;height:'+EH+'px">'+I+'<i class="cvh" data-c="nw"></i><i class="cvh" data-c="ne"></i><i class="cvh" data-c="sw"></i><i class="cvh" data-c="se"></i></div>'
   +'<div class="fb" style="margin-top:8px"><button class="bt s w" data-a="cvzm" title="Achicar">−</button><button class="bt s w" data-a="cvzp" title="Agrandar">+</button><button class="bt s w" data-a="cvc">Centrar de nuevo</button></div></div>'
-  +'<div><div class="sidet" style="text-align:left;margin-bottom:4px">Así lo verá el usuario</div><div class="tl" id="cvp" style="width:'+(W+4)+'px;cursor:default"><div class="im" style="flex:none;height:'+H+'px">'+I+'</div><div class="cd" id="cvcd"></div><div class="nm" id="cvnm"></div></div></div></div>';cvTxt()}
+  +'<div><div class="sidet" style="text-align:left;margin-bottom:4px">Así lo verá el usuario</div><div class="tl" id="cvp" style="width:'+(W+4)+'px;cursor:default"><div class="im" style="flex:none;height:'+H+'px">'+I+'</div><div class="cd" id="cvcd"></div><div class="nm" id="cvnm"></div></div></div></div>';cvTxt();encApply()}
 document.addEventListener('pointerdown',e=>{const b=e.target.closest&&e.target.closest('#cvb');if(!b)return;const h=e.target.closest('.cvh'),r=b.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;
  CVD={m:h?'z':'p',im:b.querySelector('img'),x:e.clientX,y:e.clientY,o:encParse(ENC),w:b.clientWidth,h:b.clientHeight,d0:Math.max(8,Math.hypot(e.clientX-cx,e.clientY-cy)),cx,cy};e.preventDefault()});
 document.addEventListener('pointermove',e=>{if(!CVD)return;const d=CVD,nw=d.im.naturalWidth||1,nh=d.im.naturalHeight||1;
