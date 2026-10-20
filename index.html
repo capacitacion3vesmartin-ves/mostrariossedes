@@ -54,6 +54,7 @@ h1{margin:10px 0 4px;text-align:center;font-size:38px;color:#0b5d1f}
 .tl .nm{padding:0 7px 7px;font-size:12.5px;color:var(--mu);min-height:34px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .ct{display:flex;gap:2px;justify-content:center;background:#fff8d6;padding:3px;border-radius:0 0 10px 10px}.ct button{flex:1;border:0;background:none;cursor:pointer;font-size:15px;padding:3px}
 .ct .hd{cursor:grab;touch-action:none;font-weight:900;background:#fde68a;border-radius:6px}
+.ct svg{width:15px;height:15px;display:block;margin:0 auto}.ct button{line-height:1;min-height:0}.ct .hd{font-size:13px}
 .lbl{font-size:11.5px;color:var(--mu);font-weight:700;padding:0 7px 4px}
 /* nodos para cambiar el tamaño (como Photoshop): aparecen al pasar el mouse */
 .tl{--hs:12px}
@@ -226,6 +227,17 @@ h1{margin:10px 0 4px;text-align:center;font-size:38px;color:#0b5d1f}
 .sn.mini{width:52px;padding:8px}
 }
 .sng[hidden]{display:none}
+/* espacios vacíos marcados en gris */
+.gv{position:relative;display:flex;align-items:center;justify-content:center;text-align:center;border:2px solid #b3bdb6;border-radius:12px;background:repeating-linear-gradient(45deg,#d9dfdb,#d9dfdb 9px,#cfd6d1 9px,#cfd6d1 18px);color:#6b7c72;font-weight:800;font-size:13px;user-select:none}
+.gv.tl{cursor:default;flex-direction:column;justify-content:center;align-items:stretch;padding:0}.gv .gvt{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}.gv .ct{border-radius:0 0 10px 10px}.gv .gx{position:absolute;right:4px;top:4px;border:0;border-radius:50%;width:24px;height:24px;background:#e11d48;color:#fff;font-weight:900;cursor:pointer;line-height:1}
+@media(max-width:600px){.gv{font-size:10.5px}}
+/* zona para arrastrar imagen */
+.dzt{margin-top:8px;border:3px dashed #93c5fd;border-radius:12px;background:#f3f8ff;color:#1d4ed8;font-weight:800;text-align:center;padding:24px 10px;font-size:14px;cursor:pointer}
+.dzt small{display:block;font-weight:600;color:#475569;margin-top:2px}
+#fz.dz .dzt{background:#dbeafe;border-color:#2563eb}
+/* elegir partes a descargar */
+.dpl{display:flex!important;align-items:center;gap:10px;border:2px solid var(--bd);border-radius:10px;padding:9px 12px;cursor:pointer;color:var(--tx)!important;font-size:14px!important;margin-top:8px!important}
+.dpl input{width:20px;height:20px;margin:0}.dpl small{margin-left:auto;font-weight:600;color:var(--mu)}
 .snq{width:100%;margin:2px 0 6px;border:2px solid var(--bd);border-radius:12px;padding:10px 12px;font-size:14.5px;background:#fff;color:var(--tx)}.snq:focus{outline:0;border-color:var(--g)}
 .nqe{justify-content:center;text-transform:none;letter-spacing:0}.nqe[hidden]{display:none}
 @media(max-width:800px){.sng{display:contents}.snq{display:none}}
@@ -314,7 +326,9 @@ let SEDE=null,MOS=null,Q='',FT='',FM=[],PT=[],PRE=null,FLASH=null,FLASH2=null,FL
 const sedeCol=()=>(SEDES.find(s=>s[0]==SEDE)||[0,'#0e9a22'])[1];
 const ordM=(a,b)=>(a.orden==null||a.orden===''?1e9:+a.orden)-(b.orden==null||b.orden===''?1e9:+b.orden);
 const mosSede=()=>DB.mos.filter(m=>m.sede==SEDE&&m.estado=='ACTIVO').sort(ordM);
-const prodsOf=id=>DB.prods.filter(p=>p.mos==id&&p.estado=='ACTIVO').sort((a,b)=>a.r-b.r||a.c-b.c);
+const prodsOf=id=>DB.prods.filter(p=>p.mos==id&&p.estado=='ACTIVO'&&!p.gris).sort((a,b)=>a.r-b.r||a.c-b.c);
+const grisOf=id=>DB.prods.filter(p=>p.mos==id&&p.estado=='ACTIVO'&&p.gris);
+const todoOf=id=>prodsOf(id).concat(grisOf(id));
 const nReal=id=>prodsOf(id).length;
 const pend=pid=>DB.reps.filter(r=>r.prod==pid&&r.estado=='PENDIENTE').length;
 const pendSede=()=>DB.reps.filter(r=>r.sede==SEDE&&r.estado=='PENDIENTE').length;
@@ -331,20 +345,22 @@ const fotosM=m=>{const a=[],g=genFoto(m),V=partesVis(m);if(g)a.push([g,'Vista ge
 const PCOL=['#2563eb','#f58a07','#7c3aed','#e11d48','#0891b2','#65a30d','#c026d3','#ca8a04'];
 const secOf=(m,p)=>{const P=m.partes||[];if(!P.length)return '';return P.some(x=>x.id==p.parte)?p.parte:P[0].id};
 const prodsSec=(m,s)=>prodsOf(m.id).filter(p=>secOf(m,p)==s);
+const grisSec=(m,s)=>grisOf(m.id).filter(p=>secOf(m,p)==s);
+const todoSec=(m,s)=>prodsSec(m,s).concat(grisSec(m,s));
 const secFilas=(m,s)=>{if(s){const t=(m.partes||[]).find(x=>x.id==s);if(t)return +t.filas||1}return +m.filas||1};
 const setFilas=(m,s,n)=>{if(s){const t=(m.partes||[]).find(x=>x.id==s);if(t){t.filas=n;return}}m.filas=n};
 const parteNom=(m,s)=>{const t=(m.partes||[]).find(x=>x.id==s);return t?t.nombre:''};
 const rc=p=>({r:p.r,c:p.c,w:+p.sx||1,h:+p.sy||1});
 const solapa=(a,b)=>a.r<b.r+b.h&&b.r<a.r+a.h&&a.c<b.c+b.w&&b.c<a.c+a.w;
 function libre(m,ign,Rt,s){if(Rt.r<0||Rt.c<0||Rt.w<1||Rt.h<1||Rt.c+Rt.w>(+m.cols)||Rt.r+Rt.h>secFilas(m,s))return false;
- return !prodsSec(m,s).some(p=>!ign.includes(p.id)&&solapa(rc(p),Rt))}
+ return !todoSec(m,s).some(p=>!ign.includes(p.id)&&solapa(rc(p),Rt))}
 function hueco(m,w,h,s){let crecio=false;
  for(let g=0;g<=MAXF;g++){const F=secFilas(m,s);for(let r=0;r+h<=F;r++)for(let c=0;c+w<=m.cols;c++)if(libre(m,[],{r,c,w,h},s))return{r,c,crecio};
   if(F>=MAXF)return null;setFilas(m,s,F+1);crecio=true}return null}
 const loc=p=>{const m=getM(p.mos),P=(m&&m.partes)||[];return (P.length?parteNom(m,secOf(m,p))+' · ':'')+'Fila '+(p.r+1)+' · Columna '+(p.c+1)+(p.sx>1||p.sy>1?' (ocupa '+p.sx+'×'+p.sy+')':'')};
 const match=p=>{const t=nrm(p.codigo+' '+p.nombre);return nrm(Q).split(/\s+/).filter(Boolean).every(w=>t.includes(w))};
 /* Deshacer */
-function snap(){const m=getM(MOS);UNDO.push(JSON.stringify({id:m.id,cols:m.cols,filas:m.filas,pf:(m.partes||[]).map(x=>[x.id,x.filas]),p:prodsOf(m.id).map(p=>[p.id,p.r,p.c,p.sx,p.sy,p.parte||''])}));if(UNDO.length>30)UNDO.shift()}
+function snap(){const m=getM(MOS);UNDO.push(JSON.stringify({id:m.id,cols:m.cols,filas:m.filas,pf:(m.partes||[]).map(x=>[x.id,x.filas]),p:todoOf(m.id).map(p=>[p.id,p.r,p.c,p.sx,p.sy,p.parte||''])}));if(UNDO.length>30)UNDO.shift()}
 function deshacer(){const s=UNDO.pop();if(!s)return;const o=JSON.parse(s),m=getM(o.id);m.cols=o.cols;m.filas=o.filas;
  (o.pf||[]).forEach(x=>{const t=(m.partes||[]).find(y=>y.id==x[0]);if(t)t.filas=x[1]});
  o.p.forEach(x=>{const p=getP(x[0]);if(p){p.r=x[1];p.c=x[2];p.sx=x[3];p.sy=x[4];p.parte=x[5]}});save();FLASH=FLASH2=FLASH2R=null;R();toast('Deshecho')}
@@ -369,6 +385,11 @@ function moveRS(e){const d=RS.d;let dx=Math.round((e.clientX-RS.x)/RS.px),dy=Mat
 function finRS(cancel){if(!RS)return;const r=RS;RS=null;r.pv.remove();r.t.classList.remove('rsing');SUP=true;setTimeout(()=>SUP=false,150);
  if(cancel)return;const N=r.N,o=r.o;if(N.r==o.r&&N.c==o.c&&N.w==o.w&&N.h==o.h)return;
  const p=getP(r.id);snap();p.r=N.r;p.c=N.c;p.sx=N.w;p.sy=N.h;save();R();toast('Tamaño: '+N.w+'×'+N.h+(N.w*N.h>o.w*o.h?' (más grande)':' (más pequeño)'))}
+function celdaMenu(r,c,s){const m=getM(MOS),a=' data-r="'+r+'" data-c="'+c+'" data-s="'+E(s)+'"';
+ modal('<button class="x" data-a="cerrar">×</button><h3>Fila '+(r+1)+' · Columna '+(c+1)+'</h3><div class="fx"><button class="bt" data-a="addaqui2"'+a+'>+ Añadir producto aquí</button></div>'
+  +'<div class="ptsec"><b>Dejar este espacio vacío (gris)</b><p class="ds">Márcalo cuando en el mostrario no hay producto ahí, para que se vea que no falta nada. Puede ocupar uno o más casilleros.</p>'
+  +'<div class="two"><label>↔ Ancho (columnas)<input id="gw" type="number" min="1" max="'+Math.max(1,(+m.cols)-c)+'" value="1"></label><label>↕ Alto (filas)<input id="gh" type="number" min="1" max="'+Math.max(1,secFilas(m,s)-r)+'" value="1"></label></div>'
+  +'<div id="mm" class="ms"></div><button class="bt w" data-a="ponergris"'+a+' style="margin-top:6px">Marcar como vacío</button></div>',sedeCol())}
 function closePm(){$('#pm').style.display='none'}
 function toast(t){const e=$('#tt');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',2600)}
 function modal(h,col){const m=$('#md');m.innerHTML='<div class="mc" style="--c:'+(col||'#0e9a22')+'">'+h+'</div>';m.style.display='flex'}
@@ -411,9 +432,12 @@ function barraM(m,cols,fil){const P=(m.partes||[]).length;
  return '<div class="mbar"><button class="bt s" data-a="addp">+ Añadir producto</button><button class="bt s w" data-a="editm">Editar mostrario</button><button class="bt s w" data-a="fotosm">Fotos y partes</button><span class="sp"></span><button class="bt s r" data-a="quitarm">Quitar mostrario</button></div>'
  +'<div class="mbar gb">'+ctlC(cols)+(P?'':ctlF(fil,''))+'<button class="bt s w" data-a="vacm" title="Quitar cualquier fila o columna que esté vacía, no solo la última">Quitar fila/columna vacía</button><button class="bt s w" data-a="undo"'+(UNDO.length?'':' disabled')+'>Deshacer</button>'
  +'<span class="sp"></span><span style="font-weight:600">'+(P?'Las filas se cambian en el título de cada parte. ':'')+'Arrastra un casillero (en celular, el ≡) a un espacio vacío, o sobre otro para intercambiarlos'+(P?', o sobre el título de otra parte para pasarlo a ella':'')+'. Para agrandar o encoger: pasa el mouse sobre un casillero y arrastra los puntos azules de sus bordes.</span></div>'}
-function gridHtml(m,s,cols,ed){const L=prodsSec(m,s),fil=Math.max(secFilas(m,s),...L.map(p=>p.r+p.sy)),occ=new Set();
- L.forEach(p=>{for(let i=0;i<p.sy;i++)for(let j=0;j<p.sx;j++)occ.add((p.r+i)+','+(p.c+j))});
- let cs=L.map(p=>tile(p,m,{pos:1,ed,dim:Q&&!match(p),hit:Q&&match(p)})).join('');const FR=FLASH2R&&FLASH2R.s==s?FLASH2R:null;
+function grisHtml(g,ed){const fl=FLASH==g.id,f2=FLASH2==g.id,mv=fl?'<span class="mvb">↔ Movido aquí</span>':f2?'<span class="mvb s2">← Aquí estaba</span>':'';
+ return '<div class="tl gv'+(ed?' ed':'')+(fl?' flash':'')+(f2?' flash2':'')+'" data-a="nada" data-id="'+g.id+'" style="--c0:'+(g.c+1)+';--r0:'+(g.r+1)+';--sx:'+g.sx+';--sy:'+g.sy+'"><span class="gvt">Sin producto</span>'
+  +(ed?'<div class="ct"><button class="hd" data-a="nada" title="Arrastra para mover">≡</button><button data-a="quitarg" data-id="'+g.id+'" title="Quitar este espacio">'+svgI('trash')+'</button></div>'+nodos():'')+mv+'</div>'}
+function gridHtml(m,s,cols,ed){const L=prodsSec(m,s),G=grisSec(m,s),fil=Math.max(secFilas(m,s),...L.concat(G).map(p=>p.r+p.sy)),occ=new Set();
+ L.concat(G).forEach(p=>{for(let i=0;i<p.sy;i++)for(let j=0;j<p.sx;j++)occ.add((p.r+i)+','+(p.c+j))});
+ let cs=G.map(g=>grisHtml(g,ed)).join('')+L.map(p=>tile(p,m,{pos:1,ed,dim:Q&&!match(p),hit:Q&&match(p)})).join('');const FR=FLASH2R&&FLASH2R.s==s?FLASH2R:null;
  for(let r=0;r<fil;r++)for(let c=0;c<cols;c++)if(!occ.has(r+','+c)){const f2=!!(FR&&r>=FR.r&&r<FR.r+FR.h&&c>=FR.c&&c<FR.c+FR.w);cs+=celdaV(r,c,ed,f2,f2&&r==FR.r&&c==FR.c,s)}
  return '<div class="grw"><div class="gr'+(cols>5?' wide':'')+'" data-s="'+E(s)+'" style="--n:'+cols+';--fr:'+fil+'">'+cs+'</div></div>'}
 function parteSec(m,pt,i,cols,ed){const open=!!Q||OPEN.has(pt.id),n=prodsSec(m,pt.id).length,tg=Q?'':' data-a="togp" data-id="'+E(pt.id)+'"';
@@ -488,7 +512,7 @@ function formP(p,pre,sid){FM=p?fotosP(p).slice():[''];PRE=pre||null;ENC=p&&p.enc
   +'<label>Descripción para asesores (opcional): medidas, material, uso…<textarea id="pd" lang="es" spellcheck="true" maxlength="600">'+E(p?p.desc:'')+'</textarea></label>'
   +'<label><input id="pa" type="checkbox" '+(p&&+p.agotado?'checked':'')+'> Marcar como agotado</label>'
   +'<label style="margin-top:14px">Fotos del producto (enlaces). La primera es la portada.</label><div id="fth"></div><button class="bt s w" data-a="addfoto" style="margin-top:8px">+ Agregar más fotos</button><div id="cvr"></div>'
-  +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button><button class="bt" data-a="guardarp" data-id="'+(p?p.id:'')+'">Guardar</button></div>',sedeCol());drawFotos()}
+  +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button>'+(p?'':'<button class="bt w" data-a="dejarvacio" title="No pongas producto: este espacio queda en gris y se puede mover y agrandar como un producto">Dejar espacio vacío</button>')+'<button class="bt" data-a="guardarp" data-id="'+(p?p.id:'')+'">Guardar</button></div>',sedeCol());drawFotos()}
 function guardarP(id){if($('#pn')&&$('#pn').readOnly){msg('Espera: estoy identificando el producto…');return}const c=$('#pc').value.trim().toUpperCase(),n=$('#pn').value.trim();if(!c||!n){msg('Escribe el código y el nombre.');return}
  const raw=FM.map(s=>String(s||'').trim());for(let i=0;i<raw.length;i++)if(raw[i]&&!okImg(raw[i])){msg('La foto '+(i+1)+' no es un enlace válido (debe empezar con https://).');return}
  const fs=raw.filter(Boolean);if(!fs.length){msg('Agrega al menos una foto (enlace).');return}
@@ -511,28 +535,29 @@ function drawPartes(){const v=$('#pts');if(!v)return;const m=getM(MOS);
    +(n?'<span class="ds" style="margin:0;font-size:12px">'+n+' producto'+(n==1?'':'s')+' en esta parte</span>':'')+'<div class="fb">'
    +'<button class="upb" data-a="subir" data-k="p" data-v="'+i+'">Subir imagen</button>'+(i>0?'<button data-a="uppt" data-v="'+i+'">↑ Subir</button>':'')+(i<PT.length-1?'<button data-a="dnpt" data-v="'+i+'">↓ Bajar</button>':'')+'<button class="dx" data-a="delpt" data-v="'+i+'">× Quitar</button></div></div></div>'}).join(''):'<p class="ds">Aún no hay partes. Pulsa «Agregar parte».</p>'}
 /* Editar mostrario: solo los datos (nombre, ícono, columnas y filas) */
-function formM(m){const P=m&&m.partes&&m.partes.length;
+function formM(m){const P=m&&m.partes&&m.partes.length;FT='';
  modal('<button class="x" data-a="cerrar">×</button><h3>'+(m?'Editar mostrario':'Nuevo mostrario')+'</h3>'
   +'<label>Nombre<input id="mn" type="text" maxlength="50" value="'+E(m?m.nombre:'')+'" placeholder="Ej. Cerraduras"></label>'+secSel(m)
   +'<label>Ícono</label><input id="mi" type="hidden" value="'+iconKey(m)+'"><div class="ip">'+PICK.map(x=>'<button type="button" class="'+(x==iconKey(m)?'sel':'')+'" data-a="pickic" data-v2="'+x+'" title="Elegir ícono">'+ico({id:m?m.id:'nuevo',nombre:m?m.nombre:'',icono:x}).replace(/--c:[^"]+/,'--c:#475569')+'</button>').join('')+'</div>'
   +'<div class="two"><label>↔ Columnas<input id="mcn" type="number" min="1" max="'+MAXC+'" value="'+E(m?m.cols:5)+'"></label>'+(P?'':'<label>↕ Filas<input id="mfn" type="number" min="1" max="'+MAXF+'" value="'+E(m?m.filas:4)+'"></label>')+'</div>'
   +'<p class="ds" style="font-size:12.5px">'+(P?'Este mostrario tiene partes: las filas se cambian dentro de cada parte (− + en su título). ':'')+'Al aumentar columnas o filas se añaden espacios vacíos: lo que ya está puesto no se mueve. Para quitar, la última fila/columna debe estar vacía.</p>'
-  +(m?'':'<p class="ds" style="font-size:12.5px">Las fotos y las partes se añaden después, con el botón «Fotos y partes».</p>')
+  +(m?'':'<div id="fz"><label>Foto general del mostrario (opcional)<input id="fe" type="text" placeholder="Pega un enlace https://..."></label><div class="dzt" data-a="subir" data-k="g" data-v="0">⬇ Arrastra la imagen aquí<small>o haz clic para elegirla · también puedes pegarla con Ctrl+V</small></div><div id="fv" class="pv"></div></div><p class="ds" style="font-size:12.5px">Las partes y más fotos se añaden después, con el botón «Fotos y partes».</p>')
   +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button><button class="bt" data-a="guardarm" data-id="'+(m?m.id:'')+'">Guardar</button></div>',sedeCol())}
 function guardarM(id){const n=$('#mn').value.trim();if(!n){msg('Escribe el nombre.');return}
+ const ft0=String(FT||'').trim();if(!id&&ft0&&!okImg(ft0)){msg('La foto no es un enlace válido (debe empezar con https://).');return}
  const sv=$('#msc').value;let sec=sv=='__otra'?$('#mso').value.trim():sv;const cn=SECC.find(x=>x.toLowerCase()==sec.toLowerCase());if(cn)sec=cn;
  const cols=cl(parseInt($('#mcn').value)||4,1,MAXC),mf=$('#mfn'),ic=$('#mi').value.trim()||'box';
- if(id){const m=getM(id),L=prodsOf(id),mc=Math.max(0,...L.map(p=>p.c+p.sx));
+ if(id){const m=getM(id),L=todoOf(id),mc=Math.max(0,...L.map(p=>p.c+p.sx));
   if(cols<mc){msg('Hay productos hasta la columna '+mc+'. Muévelos antes de reducir las columnas.');return}
   let fil=+m.filas;
   if(mf&&!(m.partes||[]).length){fil=cl(parseInt(mf.value)||1,1,MAXF);const mx=Math.max(0,...L.map(p=>p.r+p.sy));if(fil<mx){msg('Hay productos hasta la fila '+mx+'. Muévelos antes de reducir las filas.');return}}
   if(m.cols!=cols||m.filas!=fil)UNDO=[];Object.assign(m,{nombre:n,icono:ic,cols,filas:fil,seccion:sec})}
- else DB.mos.push({id:rid(),sede:SEDE,estado:'ACTIVO',seccion:sec,nombre:n,icono:ic,cols,filas:cl(parseInt(mf.value)||4,1,MAXF),foto:'',fotos:[],partes:[]});
+ else DB.mos.push({id:rid(),sede:SEDE,estado:'ACTIVO',seccion:sec,nombre:n,icono:ic,cols,filas:cl(parseInt(mf.value)||4,1,MAXF),foto:ft0,fotos:[],partes:[]});
  save();cerrar();R()}
 /* Fotos y partes: foto general y partes (cada parte = su propia cuadrícula de productos) */
 function formF(m){PT=(m.partes||[]).map(x=>({...x}));FT=genFoto(m);const dv=/^data:/i.test(FT);
  modal('<button class="x" data-a="cerrar">×</button><h3>Fotos y partes</h3><p class="ds"><b>'+ico(m)+' '+E(m.nombre)+'</b></p>'
-  +'<div id="fz"><label>Foto general del mostrario (arrastra la foto o pega un enlace)<input id="fe" type="text" value="'+E(dv?'':FT)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'https://...')+'"></label><div id="fv" class="pv"></div><div class="upg"><button class="upb" data-a="subir" data-k="g" data-v="0">Subir imagen</button></div></div>'
+  +'<div id="fz"><label>Foto general del mostrario (arrastra la foto o pega un enlace)<input id="fe" type="text" value="'+E(dv?'':FT)+'" placeholder="'+(dv?'Foto de muestra: pega un enlace para reemplazarla':'https://...')+'"></label><div class="dzt" data-a="subir" data-k="g" data-v="0">⬇ Arrastra la imagen aquí<small>o haz clic para elegirla · también puedes pegarla con Ctrl+V</small></div><div id="fv" class="pv"></div></div>'
   +'<div class="ptsec" id="ptsec"><b>Partes del mostrario</b><p class="ds">¿Es muy largo? Divídelo en partes (Parte 1, Parte 2…). Cada parte tiene su propia cuadrícula y, si quieres, su foto. Podrás pasar productos de una parte a otra arrastrándolos. Si quitas una parte con productos, estos pasan a la primera parte.</p><div id="pts"></div><button class="bt s" data-a="addparte" style="margin-top:8px">+ Agregar parte</button></div>'
   +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button><button class="bt" data-a="guardarf" data-id="'+m.id+'">Guardar</button></div>',sedeCol());prevF();drawPartes()}
 function guardarF(id){const m=getM(id),ft=String(FT||'').trim();
@@ -597,23 +622,23 @@ function restaurarP(id){const p=getP(id),m=getM(p.mos),s=secOf(m,p);let pos=null
  if(p.r!=null&&libre(m,[],{r:p.r,c:p.c,w:p.sx,h:p.sy},s))pos={r:p.r,c:p.c};
  else{p.sx=1;p.sy=1;pos=hueco(m,1,1,s);if(!pos){toast('El mostrario está lleno.');return}}
  p.parte=s;p.r=pos.r;p.c=pos.c;p.estado='ACTIVO';UNDO=[];save();papelera();R()}
-function cambiaGrid(tipo,d,s){s=s||'';const m=getM(MOS),esC=tipo=='c',L=esC?prodsOf(MOS):prodsSec(m,s),cur=esC?+m.cols:secFilas(m,s),max=esC?MAXC:MAXF,nom=esC?'columna':'fila';
+function cambiaGrid(tipo,d,s){s=s||'';const m=getM(MOS),esC=tipo=='c',L=esC?todoOf(MOS):todoSec(m,s),cur=esC?+m.cols:secFilas(m,s),max=esC?MAXC:MAXF,nom=esC?'columna':'fila';
  if(d>0){if(cur>=max){toast('Máximo '+max+(esC?' columnas':' filas'));return}snap();if(esC)m.cols++;else setFilas(m,s,cur+1)}
  else{if(cur<=1)return;const uso=Math.max(0,...L.map(p=>esC?p.c+p.sx:p.r+p.sy));if(uso>=cur){toast('La última '+nom+' tiene productos. Muévelos antes de quitarla.');return}snap();if(esC)m.cols--;else setFilas(m,s,cur-1)}
  save();R()}
-function vacModal(){const m=getM(MOS);if(!m)return;const P=m.partes||[],all=prodsOf(MOS),cols=+m.cols,cc=[];
+function vacModal(){const m=getM(MOS);if(!m)return;const P=m.partes||[],all=todoOf(MOS),cols=+m.cols,cc=[];
  for(let c=0;c<cols;c++)if(!all.some(p=>c>=p.c&&c<p.c+p.sx))cc.push(c);
  const secs=P.length?P.map(x=>({id:x.id,n:x.nombre})):[{id:'',n:''}];
  const chip=(t,s,n,l)=>'<button class="bt s w" data-a="delgrid" data-t="'+t+'" data-s="'+E(s)+'" data-n="'+n+'">'+l+'</button>';
  let h='<button class="x" data-a="cerrar">×</button><h3>Quitar fila o columna vacía</h3><p class="ds">Solo aparecen las que están completamente vacías. Lo que viene después se corre para no dejar un hueco.</p>';
- secs.forEach(x=>{const L=prodsSec(m,x.id),F=secFilas(m,x.id),r=[];for(let i=0;i<F;i++)if(!L.some(p=>i>=p.r&&i<p.r+p.sy))r.push(i);
+ secs.forEach(x=>{const L=todoSec(m,x.id),F=secFilas(m,x.id),r=[];for(let i=0;i<F;i++)if(!L.some(p=>i>=p.r&&i<p.r+p.sy))r.push(i);
   h+='<label>Filas vacías'+(P.length?' · '+E(x.n):'')+'</label><div class="vchips">'+(F<=1?'<span class="ds">Debe quedar al menos 1 fila.</span>':r.length?r.map(i=>chip('f',x.id,i,'Fila '+(i+1))).join(''):'<span class="ds">No hay filas vacías.</span>')+'</div>'});
  h+='<label>Columnas vacías</label><div class="vchips">'+(cols<=1?'<span class="ds">Debe quedar al menos 1 columna.</span>':cc.length?cc.map(i=>chip('c','',i,'Columna '+(i+1))).join(''):'<span class="ds">No hay columnas vacías.</span>')+'</div>'
   +'<div class="fx"><button class="bt w" data-a="cerrar">Cerrar</button></div>';
  modal(h)}
 /* ===== Eventos ===== */
 let SUP=false;
-document.addEventListener('click',e=>{closePm();const t=e.target.closest('[data-a]');if(!t){if(e.target.id=='md')cerrar();return}
+document.addEventListener('click',e=>{closePm();const t=e.target.closest('[data-a]');if(!t){if(e.target.id=='md'&&!$('#md').querySelector('[data-a=guardarp],[data-a=guardarm],[data-a=guardarf]'))cerrar();return}
  if(SUP)return;
  const a=t.dataset.a,id=t.dataset.id,v=+t.dataset.v;
  if(a=='pickic'){const i=$('#mi');if(i){i.value=t.dataset.v2;document.querySelectorAll('.ip button').forEach(b=>b.classList.toggle('sel',b===t))}}
@@ -679,6 +704,17 @@ document.addEventListener('click',e=>{closePm();const t=e.target.closest('[data-
  else if(a=='salir')salir()
  else if(a=='addp')formP(null,null,defSec())
  else if(a=='addaqui')formP(null,{r:+t.dataset.r,c:+t.dataset.c,s:t.dataset.s||''},t.dataset.s||'')
+ else if(a=='addaqui2')formP(null,{r:+t.dataset.r,c:+t.dataset.c,s:t.dataset.s||''},t.dataset.s||'')
+ else if(a=='ponergris'){const m=getM(MOS),r=+t.dataset.r,c=+t.dataset.c,sc=t.dataset.s||'',w=cl(parseInt($('#gw').value)||1,1,MAXC),h=cl(parseInt($('#gh').value)||1,1,MAXF);
+  if(!libre(m,[],{r,c,w,h},sc)){msg('No cabe: ahí hay productos o se sale de la cuadrícula. Prueba con un tamaño menor.');return}
+  DB.prods.push({id:rid(),mos:MOS,parte:sc,r,c,sx:w,sy:h,estado:'ACTIVO',gris:1,codigo:'',nombre:'',desc:'',foto:'',fotos:[],agotado:0});UNDO=[];if(sc)OPEN.add(sc);save();cerrar();R();toast('Espacio vacío marcado ('+w+'×'+h+')')}
+ else if(a=='dejarvacio'){const m=getM(MOS),sel=$('#pp'),s=sel?sel.value:defSec();let pos=PRE&&PRE.r!=null&&(PRE.s||'')==s?PRE:null;
+  if(pos&&!libre(m,[],{r:pos.r,c:pos.c,w:1,h:1},s))pos=null;
+  if(!pos){pos=hueco(m,1,1,s);if(!pos){msg('Esa parte está llena (máximo '+MAXF+' filas).');return}}
+  DB.prods.push({id:rid(),mos:MOS,parte:s,r:pos.r,c:pos.c,sx:1,sy:1,estado:'ACTIVO',gris:1,codigo:'',nombre:'',desc:'',foto:'',fotos:[],agotado:0});UNDO=[];if(s)OPEN.add(s);save();cerrar();R();toast('Espacio vacío guardado')}
+ else if(a=='quitarg'){const g=getP(id);if(g){g.estado='BORRADO';UNDO=[];save();R();toast('Espacio gris quitado')}}
+ else if(a=='dvall'){document.querySelectorAll('.dvp').forEach(x=>x.checked=!!v)}
+ else if(a=='dlvok'){const ids=[...document.querySelectorAll('.dvp:checked')].map(x=>x.value);if(!ids.length){msg('Marca al menos una parte.');return}cerrar();dlVista(t.dataset.t,ids)}
  else if(a=='edit')formP(getP(id))
  else if(a=='guardarp')guardarP(id)
  else if(a=='toggag'){const p=getP(id);p.agotado=+p.agotado?0:1;save();ver(id);R()}
@@ -689,8 +725,8 @@ document.addEventListener('click',e=>{closePm();const t=e.target.closest('[data-
  else if(a=='togp'){if(OPEN.has(id))OPEN.delete(id);else OPEN.add(id);R()}
  else if(a=='vacm')vacModal()
  else if(a=='delgrid'){const tp=t.dataset.t,sc=t.dataset.s||'',nn=+t.dataset.n,m=getM(MOS);
-  if(tp=='f'){if(secFilas(m,sc)<=1||prodsSec(m,sc).some(p=>nn>=p.r&&nn<p.r+p.sy)){toast('Esa fila ya no está vacía.');vacModal();return}snap();prodsSec(m,sc).forEach(p=>{if(p.r>nn)p.r--});setFilas(m,sc,secFilas(m,sc)-1)}
-  else{if(+m.cols<=1||prodsOf(MOS).some(p=>nn>=p.c&&nn<p.c+p.sx)){toast('Esa columna ya no está vacía.');vacModal();return}snap();prodsOf(MOS).forEach(p=>{if(p.c>nn)p.c--});m.cols--}
+  if(tp=='f'){if(secFilas(m,sc)<=1||todoSec(m,sc).some(p=>nn>=p.r&&nn<p.r+p.sy)){toast('Esa fila ya no está vacía.');vacModal();return}snap();todoSec(m,sc).forEach(p=>{if(p.r>nn)p.r--});setFilas(m,sc,secFilas(m,sc)-1)}
+  else{if(+m.cols<=1||todoOf(MOS).some(p=>nn>=p.c&&nn<p.c+p.sx)){toast('Esa columna ya no está vacía.');vacModal();return}snap();todoOf(MOS).forEach(p=>{if(p.c>nn)p.c--});m.cols--}
   save();R();vacModal();toast((tp=='f'?'Fila ':'Columna ')+(nn+1)+' quitada.')}
  else if(a=='colmas')cambiaGrid('c',1)
  else if(a=='colmenos')cambiaGrid('c',-1)
@@ -767,6 +803,7 @@ async function subirA(T,f){
   toast('Imagen subida. Pulsa Guardar para aplicarla.');return true
  }catch(err){const m=err.message;msg(m=='LEER'?'No se pudo leer la imagen. Prueba con otra.':m=='CLAVE'?'La sesión master venció. Sal y vuelve a entrar.':m=='Acción no válida'?'Falta actualizar el Apps Script (acción upload).':'No se pudo subir: '+m)}
  finally{document.querySelectorAll('.upb').forEach(b=>b.disabled=false)}}
+document.addEventListener('paste',e=>{if($('#md').style.display!='flex'||!MASTER||!$('#fz'))return;const it=[...((e.clipboardData&&e.clipboardData.items)||[])].find(i=>/^image\//.test(i.type));if(!it)return;const f=it.getAsFile();if(f){e.preventDefault();subirA({k:'g',i:0},f)}});
 function slotLibre(){let i=FM.findIndex(x=>!String(x||'').trim());if(i<0&&FM.length<6){FM.push('');i=FM.length-1;drawFotos()}return i}
 function dzMark(el){document.querySelectorAll('.dz').forEach(x=>x.classList.remove('dz'));if(el)el.classList.add('dz')}
 const dzFiles=e=>e.dataTransfer&&[...e.dataTransfer.types||[]].includes('Files');
@@ -776,7 +813,7 @@ document.addEventListener('drop',async e=>{if(!dzFiles(e))return;e.preventDefaul
  if($('#md').style.display!='flex'||!MASTER)return;
  const fs=[...e.dataTransfer.files].filter(f=>/^image\//i.test(f.type));if(!fs.length){msg('Ese archivo no es una imagen.');return}
  const row=e.target.closest('.fr'),fi=row&&row.querySelector('[data-fi]'),pf=row&&row.querySelector('[data-pf]');let T=null;
- if(fi)T={k:'f',i:+fi.dataset.fi};else if(pf)T={k:'p',i:+pf.dataset.pf};else if(e.target.closest('#fz'))T={k:'g',i:0};
+ if(fi)T={k:'f',i:+fi.dataset.fi};else if(pf)T={k:'p',i:+pf.dataset.pf};else if(e.target.closest('#fz')||($('#fz')&&!$('#fth')&&!$('#pts')))T={k:'g',i:0};
  else if($('#fth')){const i=slotLibre();if(i<0){msg('Máximo 6 fotos por producto.');return}T={k:'f',i}}
  if(!T)return;
  for(let n=0;n<fs.length;n++){if(n>0){if(T.k!='f')break;const i=slotLibre();if(i<0){msg('Máximo 6 fotos por producto.');break}T={k:'f',i}}
@@ -907,11 +944,19 @@ function dibujaVista(m,secs,B,cols,o){const W=o.W,H=o.H,CW=o.CW,RH=o.RH,TXT=o.TX
  const F='system-ui,Arial,sans-serif',tt=SEDE+' · '+m.nombre;let fs=44;c.font='800 '+fs+'px '+F;while(fs>22&&c.measureText(tt).width>W-2*VG){fs--;c.font='800 '+fs+'px '+F}
  c.fillStyle='#0b5d1f';c.fillText(tt,VG,20);
  c.fillStyle='#5b6f66';c.font='600 22px '+F;c.fillText('Vista como la ve el usuario · '+cols+' columna'+(cols==1?'':'s')+(secDe(m)?' · '+secDe(m):'')+' · '+new Date().toLocaleDateString('es-PE'),VG,20+fs+14);
- const gx0=Math.round((W-(cols*CW+VG*(cols-1)))/2);let y=o.HDR;
+ const gx0=Math.round((W-(cols*CW+VG*(cols-1)))/2);
+ const nt1='AVISO: los precios de las viñetas de las fotos y el stock pueden variar y no estar vigentes.',nt2='Verifique siempre el precio y la disponibilidad actual en el sistema.',bx=VG,bw=W-2*VG,by=112,bh=76;
+ c.fillStyle='#fef2f2';rrect(c,bx,by,bw,bh,12);c.fill();c.strokeStyle='#dc2626';c.lineWidth=2;c.stroke();c.fillStyle='#b91c1c';c.textAlign='center';
+ [['800',nt1],['600',nt2]].forEach((l,i)=>{let nz=22;c.font=l[0]+' '+nz+'px '+F;while(nz>11&&c.measureText(l[1]).width>bw-24){nz--;c.font=l[0]+' '+nz+'px '+F}c.fillText(l[1],W/2,by+12+i*28)});c.textAlign='left';
+ let y=o.HDR;
  secs.forEach(s=>{
   if(s.nom){c.fillStyle=s.col||'#10a43a';rrect(c,VG,y,W-2*VG,52,12);c.fill();c.fillStyle='#fff';c.font='800 26px '+F;c.fillText(s.nom,VG+18,y+13);const w1=c.measureText(s.nom).width;c.font='600 20px '+F;c.fillText(s.L.length+' producto'+(s.L.length==1?'':'s'),VG+18+w1+16,y+17);y+=52+VG}
-  const occ=new Set();s.L.forEach(p=>{for(let i=0;i<p.sy;i++)for(let j=0;j<p.sx;j++)occ.add((p.r+i)+','+(p.c+j))});
+  const occ=new Set();s.L.concat(s.G||[]).forEach(p=>{for(let i=0;i<p.sy;i++)for(let j=0;j<p.sx;j++)occ.add((p.r+i)+','+(p.c+j))});
   for(let r=0;r<s.fil;r++)for(let q=0;q<cols;q++)if(!occ.has(r+','+q)){c.fillStyle='rgba(0,0,0,.045)';rrect(c,gx0+q*(CW+VG),y+r*(RH+VG),CW,RH,14);c.fill()}
+  (s.G||[]).forEach(g=>{const x=gx0+g.c*(CW+VG),yy=y+g.r*(RH+VG),w=g.sx*CW+(g.sx-1)*VG,h=g.sy*RH+(g.sy-1)*VG;
+   c.save();rrect(c,x,yy,w,h,14);c.clip();c.fillStyle='#d3dad5';c.fillRect(x,yy,w,h);c.strokeStyle='#c2cac4';c.lineWidth=10;
+   for(let d=-h;d<w;d+=36){c.beginPath();c.moveTo(x+d,yy+h);c.lineTo(x+d+h,yy);c.stroke()}c.restore();
+   c.strokeStyle='#a9b4ad';c.lineWidth=2;rrect(c,x,yy,w,h,14);c.stroke()});
   s.L.forEach(p=>{const x=gx0+p.c*(CW+VG),yy=y+p.r*(RH+VG),w=p.sx*CW+(p.sx-1)*VG,h=p.sy*RH+(p.sy-1)*VG,ih=h-TXT,b=B[p.id],nf=fotosP(p).length;
    c.fillStyle='#fff';rrect(c,x,yy,w,h,14);c.fill();
    c.save();rrect(c,x,yy,w,ih,14);c.clip();c.fillRect(x,yy+ih/2,w,ih/2);c.fillStyle='#e8efe9';c.fillRect(x,yy,w,ih);
@@ -925,22 +970,26 @@ function dibujaVista(m,secs,B,cols,o){const W=o.W,H=o.H,CW=o.CW,RH=o.RH,TXT=o.TX
    c.fillStyle='#13302a';c.font='800 '+Math.round(22*sc)+'px ui-monospace,Consolas,monospace';c.fillText(String(p.codigo||''),x+10,yy+ih+Math.round(8*sc));
    c.fillStyle='#5b6f66';c.font='600 '+Math.round(19*sc)+'px '+F;envuelve(c,p.nombre,w-20,2).forEach((l,j)=>c.fillText(l,x+10,yy+ih+Math.round(38*sc)+j*Math.round(23*sc)))});
   y+=s.fil*(RH+VG)-VG+VG*2});
- const nt1='AVISO: los precios de las viñetas de las fotos y el stock pueden variar y no estar vigentes.',nt2='Verifique siempre el precio y la disponibilidad actual en el sistema.',bx=VG,bw=W-2*VG,by=H-o.FT+10,bh=o.FT-20;
- c.fillStyle='#fef2f2';rrect(c,bx,by,bw,bh,12);c.fill();c.strokeStyle='#dc2626';c.lineWidth=2;c.stroke();c.fillStyle='#b91c1c';c.textAlign='center';
- [['800',nt1],['600',nt2]].forEach((l,i)=>{let nz=22;c.font=l[0]+' '+nz+'px '+F;while(nz>11&&c.measureText(l[1]).width>bw-24){nz--;c.font=l[0]+' '+nz+'px '+F}c.fillText(l[1],W/2,by+10+i*28)});c.textAlign='left';
  return cv}
-async function dlVista(tipo){if(DLP)return;const m=getM(MOS);if(!m)return;
+function pedirPartes(tipo){const m=getM(MOS),P=m.partes||[],PV=P.filter(pt=>prodsSec(m,pt.id).length);
+ modal('<button class="x" data-a="cerrar">×</button><h3>¿Qué partes quieres descargar?</h3><p class="ds">Marca las partes que irán en el archivo.</p>'
+  +PV.map(pt=>{const n=prodsSec(m,pt.id).length;return '<label class="dpl"><input type="checkbox" class="dvp" value="'+E(pt.id)+'" checked><b>'+E(pt.nombre)+'</b><small>'+n+' producto'+(n==1?'':'s')+'</small></label>'}).join('')
+  +'<div class="two" style="margin-top:10px"><button class="bt s w" data-a="dvall" data-v="1">Marcar todas</button><button class="bt s w" data-a="dvall" data-v="0">Quitar todas</button></div>'
+  +'<div id="mm" class="ms"></div><div class="fx"><button class="bt w" data-a="cerrar">Cancelar</button><button class="bt" data-a="dlvok" data-t="'+tipo+'">Descargar</button></div>',sedeCol())}
+async function dlVista(tipo,sel){if(DLP)return;const m=getM(MOS);if(!m)return;
  const P=m.partes||[],PV=P.filter(pt=>prodsSec(m,pt.id).length),cols=+m.cols||4,all=prodsOf(m.id);
- if(!all.length){toast('Este mostrario no tiene productos.');return}DLP=true;
+ if(!all.length){toast('Este mostrario no tiene productos.');return}
+ if(PV.length>=2&&!sel){pedirPartes(tipo);return}
+ const PVs=sel?PV.filter(pt=>sel.includes(pt.id)):PV;DLP=true;
  try{
-  const secs=PV.length>=2?PV.map(pt=>({id:pt.id,nom:pt.nombre,col:PCOL[P.indexOf(pt)%PCOL.length]})):[{id:PV.length?PV[0].id:'',nom:'',col:''}];
-  secs.forEach(s=>{s.L=prodsSec(m,s.id);s.fil=Math.max(secFilas(m,s.id),...s.L.map(p=>p.r+p.sy))});
+  const secs=PV.length>=2?PVs.map(pt=>({id:pt.id,nom:pt.nombre,col:PCOL[P.indexOf(pt)%PCOL.length]})):[{id:PV.length?PV[0].id:'',nom:'',col:''}];
+  secs.forEach(s=>{s.L=prodsSec(m,s.id);s.G=grisSec(m,s.id);s.fil=Math.max(secFilas(m,s.id),...s.L.concat(s.G).map(p=>p.r+p.sy))});
   const prods=secs.reduce((a,s)=>a.concat(s.L),[]),B={};let hecho=0;
   for(let i=0;i<prods.length;i+=4){await Promise.all(prods.slice(i,i+4).map(async p=>{const u=fotosP(p)[0];try{if(u){const bl=await imgBlob(u);B[p.id]=await createImageBitmap(bl)}}catch(e){}hecho++;toast('Preparando la vista… '+hecho+' de '+prods.length)}))}
   const CW=Math.max(170,Math.min(380,Math.floor((2000-VG*(cols+1))/cols))),sc=Math.max(.65,Math.min(1.15,CW/330)),TXT=Math.round(88*sc),RH=Math.round(CW*.62)+TXT,
-   W=Math.max(900,cols*CW+VG*(cols+1)),HDR=130,FT=92;
+   W=Math.max(900,cols*CW+VG*(cols+1)),HDR=206,FT=10;
   let H=HDR+FT;secs.forEach(s=>{H+=(s.nom?52+VG:0)+s.fil*(RH+VG)-VG+VG*2});
-  const cv=dibujaVista(m,secs,B,cols,{W,H,CW,RH,TXT,sc,HDR,FT}),nom=dlNom(m)+' - Vista';
+  const cv=dibujaVista(m,secs,B,cols,{W,H,CW,RH,TXT,sc,HDR,FT}),nom=dlNom(m)+' - Vista'+(sel&&PVs.length<PV.length?' ('+PVs.map(x=>x.nombre).join(', ').replace(/[\\/:*?"<>|]+/g,'')+')':'');
   if(tipo=='img')guardaBlob(await aBlob(cv,.92),nom+'.jpg');
   else{const bl=await aBlob(cv,.9);guardaBlob(pdfDeJpgs([{w:cv.width,h:cv.height,b:new Uint8Array(await bl.arrayBuffer())}]),nom+'.pdf')}
   const sf=prods.filter(p=>!B[p.id]).length;toast(sf?'Listo. '+sf+' producto(s) salieron sin foto.':'Descarga lista')}
